@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,7 @@ using CNTK;
 
 namespace NeuralNetwork
 {
-    internal class Program
+    internal static class Program
     {
         private static readonly int[] Layers = {12, 6};
         private const int Epochs = 100;
@@ -46,7 +45,7 @@ namespace NeuralNetwork
             
             var learningRatePerSample = new TrainingParameterScheduleDouble(0.001125, 1);
 
-            var ffnnModel = CreateFFNN(ref feature, Activation.Sigmoid, OutputClasses, "stocks", ref device, Layers);
+            var ffnnModel = CreateFastForwardNetwork(ref feature, Activation.Sigmoid, OutputClasses, "stocks", ref device, Layers);
 
             var trainigLoss = CNTKLib.CrossEntropyWithSoftmax(new Variable(ffnnModel), labels, "LossFunction");
             var classificationError = CNTKLib.ClassificationError(new Variable(ffnnModel), labels, "classificationError");
@@ -83,30 +82,24 @@ namespace NeuralNetwork
             }
         }
 
-        private static Function CreateFFNN(ref Variable input, Activation activation, int outputDimension, 
+        private static Function CreateFastForwardNetwork(ref Variable input, Activation activation, int outputDimension, 
             string modelName, ref DeviceDescriptor device, IEnumerable<int> layers)
         {
-            var glorotInitializer = CNTKLib.GlorotUniformInitializer(
-                CNTKLib.DefaultParamInitScale,
-                CNTKLib.SentinelValueForInferParamInitRank,
-                CNTKLib.SentinelValueForInferParamInitRank,
-                1);
-
             var h = (Function)input;
             
             foreach (var layer in layers)
             {
                 if (layer == 0) continue;
-                h = simpleLayer(h, layer * 10, ref device);
-                h = applyActivationFunction(ref h, activation);
+                h = SimpleLayer(h, layer * 10, ref device);
+                h = ApplyActivationFunction(ref h, activation);
             }
 
-            var output = simpleLayer(h, outputDimension, ref device);
+            var output = SimpleLayer(h, outputDimension, ref device);
             output.SetName(modelName);
             return output;
         }
 
-        private static Function simpleLayer(Function input, int outputDimension, ref DeviceDescriptor device)
+        private static Function SimpleLayer(Function input, int outputDimension, ref DeviceDescriptor device)
         {
             var glorotInitializer = CNTKLib.GlorotUniformInitializer(
                 CNTKLib.DefaultParamInitScale,
@@ -122,12 +115,11 @@ namespace NeuralNetwork
             return CNTKLib.Times(weightParam, input) + biasParam;
         }
 
-        private static Function applyActivationFunction(ref Function layer, Activation activation)
+        private static Function ApplyActivationFunction(ref Function layer, Activation activation)
         {
             switch (activation)
             {
-                default:
-                case Activation.None: return layer;
+                default: return layer;
                 case Activation.ReLU: return CNTKLib.ReLU(layer);
                 case Activation.Sigmoid: return CNTKLib.Sigmoid(layer);
                 case Activation.Tanh: return CNTKLib.Tanh(layer);

@@ -48,10 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation.cs" />
-    <Compile Include="BarResult.cs" />
-    <Compile Include="CurrBar.cs" />
-    <Compile Include="DayBar.cs" />
-    <Compile Include="HourBar.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
