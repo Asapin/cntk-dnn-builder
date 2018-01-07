@@ -8,8 +8,8 @@ namespace NeuralNetwork
 {
     internal static class Program
     {
-        private static readonly int[] Layers = {12, 6};
-        private const int Epochs = 100;
+        private static readonly int[] Layers = {500, 300, 100};
+        private const int Epochs = 5000;
         private const string FeaturesStreamName = "features";
         private const string LabelsStreamName = "labels";
         private const int InputDimension = 189;
@@ -53,7 +53,7 @@ namespace NeuralNetwork
             var sgdLearner = Learner.SGDLearner(ffnnModel.Parameters(), learningRatePerSample);
             var trainer = Trainer.CreateTrainer(ffnnModel, trainigLoss, classificationError, new List<Learner> {sgdLearner});
 
-            var minEvaluation = double.MaxValue;
+            var minLossAverage = double.MaxValue;
             var i = 0;
             while (i <= Epochs)
             {
@@ -70,16 +70,18 @@ namespace NeuralNetwork
                 if (!minibatchData.Values.Any(a => a.sweepEnd)) continue;
 
                 i++;
-                var evaluationAverage = trainer.PreviousMinibatchEvaluationAverage();
-                if (evaluationAverage < minEvaluation)
+                var lossAverage = trainer.PreviousMinibatchLossAverage();
+                if (lossAverage < minLossAverage)
                 {
-                    minEvaluation = evaluationAverage;
-                    DumpNetwork(evaluationAverage, i);
+                    minLossAverage = lossAverage;
+                    Console.WriteLine($"Time: {DateTime.Now}; Epoch: {i}; Found new minimal loss: {minLossAverage}");
                 } else if (i % 100 == 0)
                 {
-                    DumpNetwork(evaluationAverage, i);
+                    DumpNetwork(ref ffnnModel, ref device, testPath, i);
                 }
             }
+            
+            Console.WriteLine($"Time: {DateTime.Now}; Minimal average loss: {minLossAverage}");
         }
 
         private static Function CreateFastForwardNetwork(ref Variable input, Activation activation, int outputDimension, 
@@ -126,10 +128,69 @@ namespace NeuralNetwork
             }
         }
 
-        private static void DumpNetwork(double evaluationAverage, int epoch)
+        private static void DumpNetwork(ref Function networkModel, ref DeviceDescriptor device, string testPath, int epoch)
         {
-            var acc = Math.Round((1.0 - evaluationAverage) * 100, 2);
-            Console.WriteLine($"Time: {DateTime.Now}; Epoch: {epoch}; Accuracy: {acc}%");
+            Console.WriteLine($"Time: {DateTime.Now}; Epoch: {epoch}; Evaluating model...");
+            var accuracy = EvaluateModel(ref networkModel, ref device, testPath);
+            Console.WriteLine($"Accuracy: {accuracy * 100}%");
+            
+        }
+        
+        private static float EvaluateModel(ref Function networkModel, ref DeviceDescriptor device, string testPath)
+        {
+            var feature = networkModel.Arguments[0];
+            var label = networkModel.Output;
+
+            var streamConfiguration = new[]
+            {
+                new StreamConfiguration(FeaturesStreamName, feature.Shape[0]), 
+                new StreamConfiguration(LabelsStreamName, label.Shape[0]) 
+            };
+
+            var minibatchSource = MinibatchSource.TextFormatMinibatchSource(testPath, streamConfiguration, 
+                MinibatchSource.InfinitelyRepeat, true);
+
+            var featureStreamInfo = minibatchSource.StreamInfo(FeaturesStreamName);
+            var labelStreamInfo = minibatchSource.StreamInfo(LabelsStreamName);
+
+            var totalMisMatches = 0;
+            var totalCount = 0L;
+
+            while (true)
+            {
+                var minibatchData = minibatchSource.GetNextMinibatch(BatchSize, device);
+                if (minibatchData == null || minibatchData.Count == 0)
+                {
+                    break;
+                }
+
+                totalCount += minibatchData[featureStreamInfo].numberOfSamples;
+
+                var labelData = minibatchData[labelStreamInfo].data.GetDenseData<float>(label);
+                var expectedLabels = labelData.Select(l => l.IndexOf(l.Max())).ToList();
+
+                var inputDataMap = new Dictionary<Variable, Value>()
+                {
+                    {feature, minibatchData[featureStreamInfo].data}
+                };
+
+                var outputDataMap = new Dictionary<Variable, Value>()
+                {
+                    {label, null}
+                };
+                
+                networkModel.Evaluate(inputDataMap, outputDataMap, device);
+                var outputData = outputDataMap[label].GetDenseData<float>(label);
+                var actualLabels = outputData.Select(l => l.IndexOf(l.Max())).ToList();
+
+                var misMatches = actualLabels.Zip(expectedLabels, (a, b) => a.Equals(b) ? 0 : 1).Sum();
+                totalMisMatches += misMatches;
+                
+                if (!minibatchData.Values.Any(a => a.sweepEnd)) continue;
+                break;
+            }
+
+            return 1.0F - (float) totalMisMatches / totalCount;
         }
     }
 }
