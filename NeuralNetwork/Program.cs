@@ -8,16 +8,25 @@ namespace NeuralNetwork
 {
     internal static class Program
     {
-        private static readonly int[] Layers = {500, 300, 100};
+        private static readonly LayerConfiguration[] Layers =
+        {
+            new LayerConfiguration(100, Activation.ReLU),
+            new LayerConfiguration(50, Activation.ReLU)
+        };
         private const int Epochs = 5000;
         private const string FeaturesStreamName = "features";
         private const string LabelsStreamName = "labels";
         private const int InputDimension = 189;
-        private const int OutputClasses = 21;
+        private const int OutputClasses = 3;
         private const uint BatchSize = 100;
 
         public static void Main(string[] args)
         {
+            if (args.Length != 1)
+            {
+                Console.WriteLine("You should provide path to a folder with train and test data");
+                return;
+            }
             var defaultDevice = DeviceDescriptor.UseDefaultDevice();
             Console.WriteLine($"CNTK, using {defaultDevice.Type}");
             
@@ -45,7 +54,7 @@ namespace NeuralNetwork
             
             var learningRatePerSample = new TrainingParameterScheduleDouble(0.001125, 1);
 
-            var ffnnModel = CreateFastForwardNetwork(ref feature, Activation.Sigmoid, OutputClasses, "stocks", ref device, Layers);
+            var ffnnModel = CreateFastForwardNetwork(ref feature, OutputClasses, "stocks", ref device, Layers);
 
             var trainigLoss = CNTKLib.CrossEntropyWithSoftmax(new Variable(ffnnModel), labels, "LossFunction");
             var classificationError = CNTKLib.ClassificationError(new Variable(ffnnModel), labels, "classificationError");
@@ -84,16 +93,15 @@ namespace NeuralNetwork
             Console.WriteLine($"Time: {DateTime.Now}; Minimal average loss: {minLossAverage}");
         }
 
-        private static Function CreateFastForwardNetwork(ref Variable input, Activation activation, int outputDimension, 
-            string modelName, ref DeviceDescriptor device, IEnumerable<int> layers)
+        private static Function CreateFastForwardNetwork(ref Variable input, int outputDimension, 
+            string modelName, ref DeviceDescriptor device, IEnumerable<LayerConfiguration> layers)
         {
             var h = (Function)input;
             
             foreach (var layer in layers)
             {
-                if (layer == 0) continue;
-                h = SimpleLayer(h, layer * 10, ref device);
-                h = ApplyActivationFunction(ref h, activation);
+                h = SimpleLayer(h, layer.NeuronCount, ref device);
+                h = ApplyActivationFunction(ref h, layer.Activation);
             }
 
             var output = SimpleLayer(h, outputDimension, ref device);
