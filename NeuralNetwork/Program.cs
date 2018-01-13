@@ -8,6 +8,8 @@ namespace NeuralNetwork
 {
     internal static class Program
     {
+        private const string DateTimeFormat = "yyyy-MM-dd-HH-mm";
+
         private static readonly LayerConfiguration[] Layers =
         {
             new LayerConfiguration(100, Activation.ReLU),
@@ -22,7 +24,7 @@ namespace NeuralNetwork
 
         public static void Main(string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length != 2)
             {
                 Console.WriteLine("You should provide path to a folder with train and test data");
                 return;
@@ -32,10 +34,10 @@ namespace NeuralNetwork
             
             var trainPath = Path.Combine(args[0], "train.csv");
             var testPath = Path.Combine(args[0], "test.csv");
-            TrainNn(ref defaultDevice, trainPath, testPath);
+            TrainNn(ref defaultDevice, trainPath, testPath, args[1]);
         }
 
-        private static void TrainNn(ref DeviceDescriptor device, string trainPath, string testPath)
+        private static void TrainNn(ref DeviceDescriptor device, string trainPath, string testPath, string saveDir)
         {
             var streamConfig = new[]
             {
@@ -64,6 +66,9 @@ namespace NeuralNetwork
 
             var minLossAverage = double.MaxValue;
             var i = 0;
+
+            var savePath = GetSavePath(saveDir);
+
             while (i <= Epochs)
             {
                 var minibatchData = minibatchSource.GetNextMinibatch(BatchSize, device);
@@ -83,10 +88,10 @@ namespace NeuralNetwork
                 if (lossAverage < minLossAverage)
                 {
                     minLossAverage = lossAverage;
-                    Console.WriteLine($"Time: {DateTime.Now}; Epoch: {i}; Found new minimal loss: {minLossAverage}");
+                    DumpNetwork(ref ffnnModel, ref device, ref trainer, testPath, i, savePath);
                 } else if (i % 100 == 0)
                 {
-                    DumpNetwork(ref ffnnModel, ref device, testPath, i);
+                    DumpNetwork(ref ffnnModel, ref device, ref trainer, testPath, i, savePath);
                 }
             }
             
@@ -136,12 +141,17 @@ namespace NeuralNetwork
             }
         }
 
-        private static void DumpNetwork(ref Function networkModel, ref DeviceDescriptor device, string testPath, int epoch)
+        private static void DumpNetwork(ref Function networkModel, ref DeviceDescriptor device, ref Trainer trainer,
+            string testPath, int epoch, string savePath)
         {
-            Console.WriteLine($"Time: {DateTime.Now}; Epoch: {epoch}; Evaluating model...");
             var accuracy = EvaluateModel(ref networkModel, ref device, testPath);
-            Console.WriteLine($"Accuracy: {accuracy * 100}%");
-            
+            var info = $"Time: {DateTime.Now}; Epoch: {epoch}; Loss: {trainer.PreviousMinibatchLossAverage()}, Accuracy: {accuracy * 100}%";
+            Console.WriteLine(info);
+
+            var epochPath = Path.Combine(savePath, epoch.ToString());
+            trainer.SaveCheckpoint(Path.Combine(epochPath, "model"));
+
+            File.WriteAllText(Path.Combine(epochPath, "info"), info);
         }
         
         private static float EvaluateModel(ref Function networkModel, ref DeviceDescriptor device, string testPath)
@@ -199,6 +209,15 @@ namespace NeuralNetwork
             }
 
             return 1.0F - (float) totalMisMatches / totalCount;
+        }
+
+        private static string GetSavePath(string saveDir)
+        {
+            var dateTimeString = DateTime.Now.ToString(DateTimeFormat);
+            var savePath = Path.Combine(saveDir, dateTimeString);
+            Directory.CreateDirectory(savePath);
+
+            return savePath;
         }
     }
 }
