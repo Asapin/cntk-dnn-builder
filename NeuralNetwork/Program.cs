@@ -18,6 +18,13 @@ namespace NeuralNetwork
         private const int OutputClasses = 3;
         private const uint BatchSize = 10;
 
+        private static readonly ILayer[] Layers =
+        {
+            new SimpleLayer(200, Activation.ReLU),
+            new SimpleLayer(100, Activation.ReLU),
+            new SimpleLayer(OutputClasses, Activation.Sigmoid),
+        };
+
         public static void Main(string[] args)
         {
             if (args.Length != 2)
@@ -38,15 +45,8 @@ namespace NeuralNetwork
             var features = Variable.InputVariable(new[] { InputDimension }, DataType.Float, FeaturesStreamName);
             var labels = Variable.InputVariable(new[] { OutputClasses }, DataType.Float, LabelsStreamName);
 
-            ILayer[] layers =
-            {
-                new SimpleLayer(200, Activation.ReLU),
-                new SimpleLayer(100, Activation.ReLU),
-                new SimpleLayer(OutputClasses, Activation.Sigmoid),
-            };
-
             Function classifierOutput = features;
-            foreach (var layer in layers)
+            foreach (var layer in Layers)
             {
                 classifierOutput = layer.Layer(ref classifierOutput, ref device);
             }
