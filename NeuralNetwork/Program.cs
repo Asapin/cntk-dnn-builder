@@ -74,14 +74,18 @@ namespace NeuralNetwork
                 if (!minibatchData.Values.Any(a => a.sweepEnd)) continue;
 
                 i++;
-                DumpNetwork(ref classifierOutput, ref device, ref trainer, testPath, i, savePath);
+                DumpNetwork(ref classifierOutput, ref device, ref trainer, testPath, i, savePath, i % 10 == 0);
             }
         }
 
         private static void DumpNetwork(ref Function networkModel, ref DeviceDescriptor device, ref Trainer trainer,
-            string testPath, int epoch, string savePath)
+            string testPath, int epoch, string savePath, bool evaluate = false)
         {
-            var accuracy = EvaluateModel(ref networkModel, ref device, testPath);
+            var accuracy = float.NaN;
+            if (evaluate)
+            {
+                accuracy = EvaluateModel(ref networkModel, ref device, testPath);
+            }
 
             var info = $"{DateTime.Now}; {epoch}; {accuracy}; {trainer.PreviousMinibatchLossAverage()}";
             Console.WriteLine(info);
