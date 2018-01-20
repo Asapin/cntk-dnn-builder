@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CNTK;
+using NeuralNetwork.Layers;
 
 namespace NeuralNetwork
 {
@@ -10,17 +11,12 @@ namespace NeuralNetwork
     {
         private const string DateTimeFormat = "yyyy-MM-dd-HH-mm";
 
-        private static readonly LayerConfiguration[] Layers =
-        {
-            new LayerConfiguration(100, Activation.ReLU),
-            new LayerConfiguration(50, Activation.ReLU)
-        };
         private const int Epochs = 5000;
         private const string FeaturesStreamName = "features";
         private const string LabelsStreamName = "labels";
         private const int InputDimension = 189;
         private const int OutputClasses = 3;
-        private const uint BatchSize = 100;
+        private const uint BatchSize = 10;
 
         public static void Main(string[] args)
         {
@@ -39,43 +35,37 @@ namespace NeuralNetwork
 
         private static void TrainNn(ref DeviceDescriptor device, string trainPath, string testPath, string saveDir)
         {
-            var streamConfig = new[]
+            var features = Variable.InputVariable(new[] { InputDimension }, DataType.Float, FeaturesStreamName);
+            var labels = Variable.InputVariable(new[] { OutputClasses }, DataType.Float, LabelsStreamName);
+
+            ILayer[] layers =
             {
-                new StreamConfiguration(FeaturesStreamName, InputDimension),
-                new StreamConfiguration(LabelsStreamName, OutputClasses)
+                new SimpleLayer(200, Activation.ReLU),
+                new SimpleLayer(100, Activation.ReLU),
+                new SimpleLayer(OutputClasses, Activation.Sigmoid),
             };
 
-            var feature = Variable.InputVariable(new NDShape(1, InputDimension), DataType.Float, FeaturesStreamName);
-            var labels = Variable.InputVariable(new NDShape(1, OutputClasses), DataType.Float, LabelsStreamName);
+            Function classifierOutput = features;
+            foreach (var layer in layers)
+            {
+                classifierOutput = layer.Layer(ref classifierOutput, ref device);
+            }
 
-            var minibatchSource = MinibatchSource.TextFormatMinibatchSource(trainPath, streamConfig,
-                MinibatchSource.InfinitelyRepeat, true);
+            var minibatchSource = GetMinibatchSource(trainPath, ref features, ref labels);
+            var trainer = GetTrainer(ref classifierOutput, ref labels);
 
             var featureStreamInfo = minibatchSource.StreamInfo(FeaturesStreamName);
             var labelStreamInfo = minibatchSource.StreamInfo(LabelsStreamName);
-            
-            var learningRatePerSample = new TrainingParameterScheduleDouble(0.001125, 1);
 
-            var ffnnModel = CreateFastForwardNetwork(ref feature, OutputClasses, "stocks", ref device, Layers);
-
-            var trainigLoss = CNTKLib.CrossEntropyWithSoftmax(new Variable(ffnnModel), labels, "LossFunction");
-            var classificationError = CNTKLib.ClassificationError(new Variable(ffnnModel), labels, "classificationError");
-
-            var sgdLearner = Learner.SGDLearner(ffnnModel.Parameters(), learningRatePerSample);
-            var trainer = Trainer.CreateTrainer(ffnnModel, trainigLoss, classificationError, new List<Learner> {sgdLearner});
-
-            var minLossAverage = double.MaxValue;
             var i = 0;
-
             var savePath = GetSavePath(saveDir);
-
             while (i <= Epochs)
             {
                 var minibatchData = minibatchSource.GetNextMinibatch(BatchSize, device);
 
                 var arguments = new Dictionary<Variable, MinibatchData>
                 {
-                    {feature, minibatchData[featureStreamInfo]},
+                    {features, minibatchData[featureStreamInfo]},
                     {labels, minibatchData[labelStreamInfo]}
                 };
 
@@ -84,60 +74,7 @@ namespace NeuralNetwork
                 if (!minibatchData.Values.Any(a => a.sweepEnd)) continue;
 
                 i++;
-                var lossAverage = trainer.PreviousMinibatchLossAverage();
-                if (lossAverage < minLossAverage)
-                {
-                    minLossAverage = lossAverage;
-                    DumpNetwork(ref ffnnModel, ref device, ref trainer, testPath, i, savePath);
-                } else if (i % 100 == 0)
-                {
-                    DumpNetwork(ref ffnnModel, ref device, ref trainer, testPath, i, savePath);
-                }
-            }
-            
-            Console.WriteLine($"Time: {DateTime.Now}; Minimal average loss: {minLossAverage}");
-        }
-
-        private static Function CreateFastForwardNetwork(ref Variable input, int outputDimension, 
-            string modelName, ref DeviceDescriptor device, IEnumerable<LayerConfiguration> layers)
-        {
-            var h = (Function)input;
-            
-            foreach (var layer in layers)
-            {
-                h = SimpleLayer(h, layer.NeuronCount, ref device);
-                h = ApplyActivationFunction(ref h, layer.Activation);
-            }
-
-            var output = SimpleLayer(h, outputDimension, ref device);
-            output.SetName(modelName);
-            return output;
-        }
-
-        private static Function SimpleLayer(Function input, int outputDimension, ref DeviceDescriptor device)
-        {
-            var glorotInitializer = CNTKLib.GlorotUniformInitializer(
-                CNTKLib.DefaultParamInitScale,
-                CNTKLib.SentinelValueForInferParamInitRank,
-                CNTKLib.SentinelValueForInferParamInitRank,
-                1);
-
-            var variable = (Variable) input;
-            var shape = new[] { outputDimension, variable.Shape[0] };
-            var weightParam = new Parameter(shape, DataType.Float, glorotInitializer, device, "w");
-            var biasParam = new Parameter(new NDShape(1, outputDimension), 0, device, "b");
-
-            return CNTKLib.Times(weightParam, input) + biasParam;
-        }
-
-        private static Function ApplyActivationFunction(ref Function layer, Activation activation)
-        {
-            switch (activation)
-            {
-                default: return layer;
-                case Activation.ReLU: return CNTKLib.ReLU(layer);
-                case Activation.Sigmoid: return CNTKLib.Sigmoid(layer);
-                case Activation.Tanh: return CNTKLib.Tanh(layer);
+                DumpNetwork(ref classifierOutput, ref device, ref trainer, testPath, i, savePath);
             }
         }
 
@@ -145,28 +82,23 @@ namespace NeuralNetwork
             string testPath, int epoch, string savePath)
         {
             var accuracy = EvaluateModel(ref networkModel, ref device, testPath);
-            var info = $"Time: {DateTime.Now}; Epoch: {epoch}; Loss: {trainer.PreviousMinibatchLossAverage()}, Accuracy: {accuracy * 100}%";
+
+            var info = $"{DateTime.Now}; {epoch}; {accuracy}; {trainer.PreviousMinibatchLossAverage()}";
             Console.WriteLine(info);
+            File.AppendAllLines(Path.Combine(savePath, "info.csv"), new []{ info });
+
+            if (epoch % 10 != 0) return;
 
             var epochPath = Path.Combine(savePath, epoch.ToString());
             trainer.SaveCheckpoint(Path.Combine(epochPath, "model"));
-
-            File.WriteAllText(Path.Combine(epochPath, "info"), info);
         }
         
         private static float EvaluateModel(ref Function networkModel, ref DeviceDescriptor device, string testPath)
         {
-            var feature = networkModel.Arguments[0];
-            var label = networkModel.Output;
+            var features = networkModel.Arguments[0];
+            var labels = networkModel.Output;
 
-            var streamConfiguration = new[]
-            {
-                new StreamConfiguration(FeaturesStreamName, feature.Shape[0]), 
-                new StreamConfiguration(LabelsStreamName, label.Shape[0]) 
-            };
-
-            var minibatchSource = MinibatchSource.TextFormatMinibatchSource(testPath, streamConfiguration, 
-                MinibatchSource.InfinitelyRepeat, true);
+            var minibatchSource = GetMinibatchSource(testPath, ref features, ref labels);
 
             var featureStreamInfo = minibatchSource.StreamInfo(FeaturesStreamName);
             var labelStreamInfo = minibatchSource.StreamInfo(LabelsStreamName);
@@ -177,28 +109,24 @@ namespace NeuralNetwork
             while (true)
             {
                 var minibatchData = minibatchSource.GetNextMinibatch(BatchSize, device);
-                if (minibatchData == null || minibatchData.Count == 0)
-                {
-                    break;
-                }
 
                 totalCount += minibatchData[featureStreamInfo].numberOfSamples;
 
-                var labelData = minibatchData[labelStreamInfo].data.GetDenseData<float>(label);
+                var labelData = minibatchData[labelStreamInfo].data.GetDenseData<float>(labels);
                 var expectedLabels = labelData.Select(l => l.IndexOf(l.Max())).ToList();
 
-                var inputDataMap = new Dictionary<Variable, Value>()
+                var inputDataMap = new Dictionary<Variable, Value>
                 {
-                    {feature, minibatchData[featureStreamInfo].data}
+                    {features, minibatchData[featureStreamInfo].data}
                 };
 
-                var outputDataMap = new Dictionary<Variable, Value>()
+                var outputDataMap = new Dictionary<Variable, Value>
                 {
-                    {label, null}
+                    {labels, null}
                 };
                 
                 networkModel.Evaluate(inputDataMap, outputDataMap, device);
-                var outputData = outputDataMap[label].GetDenseData<float>(label);
+                var outputData = outputDataMap[labels].GetDenseData<float>(labels);
                 var actualLabels = outputData.Select(l => l.IndexOf(l.Max())).ToList();
 
                 var misMatches = actualLabels.Zip(expectedLabels, (a, b) => a.Equals(b) ? 0 : 1).Sum();
@@ -218,6 +146,33 @@ namespace NeuralNetwork
             Directory.CreateDirectory(savePath);
 
             return savePath;
+        }
+
+        private static Trainer GetTrainer(ref Function model, ref Variable labels)
+        {
+            var trainingLoss = CNTKLib.CrossEntropyWithSoftmax(new Variable(model), labels, "lossFunction");
+            var prediction = CNTKLib.ClassificationError(new Variable(model), labels, "classificationError");
+
+            var learners = GetLearners(ref model);
+
+            return Trainer.CreateTrainer(model, trainingLoss, prediction, learners);
+        }
+
+        private static IList<Learner> GetLearners(ref Function model)
+        {
+            var learningRatePerSample = new TrainingParameterScheduleDouble(0.001125, 1);
+            return new List<Learner>() {Learner.SGDLearner(model.Parameters(), learningRatePerSample)};
+        }
+
+        private static MinibatchSource GetMinibatchSource(string sourcePath, ref Variable features, ref Variable labels)
+        {
+            var streamConfig = new[]
+            {
+                new StreamConfiguration(FeaturesStreamName, features.Shape[0]), 
+                new StreamConfiguration(LabelsStreamName, labels.Shape[0]) 
+            };
+            return MinibatchSource.TextFormatMinibatchSource(sourcePath, streamConfig,
+                MinibatchSource.InfinitelyRepeat, true);
         }
     }
 }
