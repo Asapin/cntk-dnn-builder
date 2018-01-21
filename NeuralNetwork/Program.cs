@@ -20,6 +20,7 @@ namespace NeuralNetwork
 
         private static readonly ILayer[] Layers =
         {
+            new DropoutLayer(0.1), 
             new SimpleLayer(200, Activation.ReLU),
             new SimpleLayer(100, Activation.ReLU),
             new SimpleLayer(OutputClasses, Activation.Sigmoid),
@@ -74,7 +75,7 @@ namespace NeuralNetwork
                 if (!minibatchData.Values.Any(a => a.sweepEnd)) continue;
 
                 i++;
-                DumpNetwork(ref classifierOutput, ref device, ref trainer, testPath, i, savePath, i % 10 == 0);
+                DumpNetwork(ref classifierOutput, ref device, ref trainer, testPath, i, savePath, true);
             }
         }
 
