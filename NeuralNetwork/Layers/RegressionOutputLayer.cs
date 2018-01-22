@@ -2,11 +2,11 @@
 
 namespace NeuralNetwork.Layers
 {
-    public class OutputLayer : ILayer
+    public class RegressionOutputLayer : ILayer
     {
         private readonly int _outputDimesion;
 
-        public OutputLayer(int outputDimesion)
+        public RegressionOutputLayer(int outputDimesion)
         {
             _outputDimesion = outputDimesion;
         }

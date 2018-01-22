@@ -21,8 +21,9 @@ namespace NeuralNetwork
         private static readonly ILayer[] Layers =
         {
             new DropoutLayer(0.3), 
-            new SimpleLayer(200, Activation.ReLU),
-            new OutputLayer(OutputClasses), 
+            new SimpleLayer(200, Activation.LeakyReLU),
+            new SimpleLayer(100, Activation.LeakyReLU),
+            new OnehotOutputLayer(OutputClasses), 
         };
 
         public static void Main(string[] args)
