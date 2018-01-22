@@ -16,14 +16,13 @@ namespace NeuralNetwork
         private const string LabelsStreamName = "labels";
         private const int InputDimension = 189;
         private const int OutputClasses = 3;
-        private const uint BatchSize = 10;
+        private const uint BatchSize = 100;
 
         private static readonly ILayer[] Layers =
         {
-            new DropoutLayer(0.1), 
+            new DropoutLayer(0.3), 
             new SimpleLayer(200, Activation.ReLU),
-            new SimpleLayer(100, Activation.ReLU),
-            new SimpleLayer(OutputClasses, Activation.Sigmoid),
+            new OutputLayer(OutputClasses), 
         };
 
         public static void Main(string[] args)
@@ -133,6 +132,26 @@ namespace NeuralNetwork
                 networkModel.Evaluate(inputDataMap, outputDataMap, device);
                 var outputData = outputDataMap[labels].GetDenseData<float>(labels);
                 var actualLabels = outputData.Select(l => l.IndexOf(l.Max())).ToList();
+
+#if DEBUG
+                foreach (var ints in outputData)
+                {
+                    foreach (var i1 in ints)
+                    {
+                        Console.Write($"{i1} ");
+                    }
+                    Console.WriteLine();
+                }
+                
+                Console.Write("Expected: ");
+                expectedLabels.ForEach(Console.Write);
+                Console.WriteLine();
+                
+                Console.Write("Actual: ");
+                actualLabels.ForEach(Console.Write);
+                Console.WriteLine();
+                Console.WriteLine("================");
+#endif
 
                 var misMatches = actualLabels.Zip(expectedLabels, (a, b) => a.Equals(b) ? 0 : 1).Sum();
                 totalMisMatches += misMatches;

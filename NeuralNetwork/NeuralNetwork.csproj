@@ -49,6 +49,7 @@
     <Compile Include="Layers\ConvolutionLayer.cs" />
     <Compile Include="Layers\DropoutLayer.cs" />
     <Compile Include="Layers\ILayer.cs" />
+    <Compile Include="Layers\OutputLayer.cs" />
     <Compile Include="Layers\SimpleLayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
