@@ -12,5 +12,6 @@ namespace NeuralNetwork
         public static readonly Apply ELU = function => CNTKLib.ELU(function);
         public static readonly Apply Tanh = function => CNTKLib.Tanh(function);
         public static readonly Apply Sigmoid = function => CNTKLib.Sigmoid(function);
+        public static readonly Apply Softmax = function => CNTKLib.Softmax(function);
     }
 }
