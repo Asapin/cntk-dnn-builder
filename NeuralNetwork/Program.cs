@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using NeuralNetwork.Layers;
 using NeuralNetwork.Network;
 
@@ -9,17 +8,14 @@ namespace NeuralNetwork
     {
         public static void Main(string[] args)
         {
-            if (args.Length != 2)
+            if (args.Length != 3)
             {
-                Console.WriteLine("You should provide path to a folder with train and test data");
+                Console.WriteLine("You should provide paths to a training data, to a testing data " +
+                                  "and to a folder for storing checkpoints");
                 return;
             }
 
-            var trainPath = Path.Combine(args[0], "train.csv");
-            var testPath = Path.Combine(args[0], "test.csv");
-            var checkpointPath = args[0];
-
-            var descriptor = new NetworkDescriptor(trainPath, testPath, checkpointPath, NetworkType.Onehot, 189, 3)
+            var descriptor = new NetworkDescriptor(args[0], args[1], args[2], NetworkType.Onehot, 189, 3)
             {
                 BatchSize = 100,
                 EpochCheckpoint = 10,
