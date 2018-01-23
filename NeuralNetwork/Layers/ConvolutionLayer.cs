@@ -29,7 +29,7 @@ namespace NeuralNetwork.Layers
             var numInputChannels = inputVar.Shape[inputVar.Shape.Rank - 1];
             
             var initializer = CNTKLib.GlorotUniformInitializer(
-                CNTKLib.DefaultParamInitScale,
+                0.01,
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank, 1);
 
