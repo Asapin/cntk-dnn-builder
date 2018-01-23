@@ -8,7 +8,7 @@ namespace NeuralNetwork.Layers
 
         public DropoutLayer(double dropoutRate)
         {
-            this._dropoutRate = dropoutRate;
+            _dropoutRate = dropoutRate;
         }
 
         public Function Layer(ref Function input, ref DeviceDescriptor device)
