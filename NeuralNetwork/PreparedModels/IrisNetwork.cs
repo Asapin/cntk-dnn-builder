@@ -23,9 +23,7 @@ namespace NeuralNetwork.PreparedModels
 
             ILayer[] layers =
             {
-                new SimpleLayer(10, Activation.LeakyReLU),
-                new SimpleLayer(20, Activation.LeakyReLU),
-                new SimpleLayer(10, Activation.LeakyReLU),
+                new SimpleLayer(6, Activation.LeakyReLU),
             };
 
             var network = new Network.NeuralNetwork(layers, descriptor);

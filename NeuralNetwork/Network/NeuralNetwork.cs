@@ -67,7 +67,7 @@ namespace NeuralNetwork.Network
                 accuracy = _evaluator.EvaluateModel(ref networkModel, ref device);
             }
 
-            var info = $"{DateTime.Now}; {epoch}; {accuracy}; {trainer.PreviousMinibatchLossAverage()}";
+            var info = $"{DateTime.Now}, {epoch}, {accuracy}, {trainer.PreviousMinibatchLossAverage()}";
             Console.WriteLine(info);
 
             File.AppendAllLines(Path.Combine(_descriptor.CheckpointSavePath, "info.csv"), new []{ info });
