@@ -24,8 +24,7 @@ namespace NeuralNetwork.Layers
             var weightParam = new Parameter(shape, DataType.Float, glorotInit, device, "weight");
             var biasParam = new Parameter(new NDShape(1 ,_outputDimesion), 0, device, "bias");
 
-            var multiply = CNTKLib.Times(weightParam, inputVar);
-            var result = CNTKLib.Plus(multiply, biasParam);
+            var result = CNTKLib.Times(weightParam, inputVar) + biasParam;
 
             return result;
         }
