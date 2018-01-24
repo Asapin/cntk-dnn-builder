@@ -5,16 +5,23 @@ namespace NeuralNetwork.PreparedModels
 {
     public class IrisNetwork
     {
-        public void Train(string checkpointPath)
-        {
-            const string trainDataPath = "../../datasets/iris/train.csv";
-            const string testDataPath = "../../datasets/iris/train.csv";
+        private const string DatasetsIrisTrainCsv = "../../datasets/iris/train.csv";
+        private const string DatasetsIrisTestCsv = "../../datasets/iris/test.csv";
 
-            var descriptor = new NetworkDescriptor(trainDataPath, testDataPath, checkpointPath, NetworkType.Onehot, 4, 3)
+        private readonly string _checkpointPath;
+
+        public IrisNetwork(string checkpointPath)
+        {
+            _checkpointPath = checkpointPath;
+        }
+
+        public void Train()
+        {
+            var descriptor = new NetworkDescriptor(DatasetsIrisTrainCsv, DatasetsIrisTestCsv, _checkpointPath, NetworkType.Onehot, 4, 3)
             {
                 BatchSize = 10,
                 EpochCheckpoint = 1,
-                Epochs = 2000,
+                Epochs = 1000,
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
@@ -23,7 +30,7 @@ namespace NeuralNetwork.PreparedModels
 
             ILayer[] layers =
             {
-                new SimpleLayer(6, Activation.LeakyReLU),
+                new SimpleLayer(1, Activation.None),
             };
 
             var network = new Network.NeuralNetwork(layers, descriptor);
