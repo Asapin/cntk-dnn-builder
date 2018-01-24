@@ -3,6 +3,10 @@ using NeuralNetwork.Network;
 
 namespace NeuralNetwork.PreparedModels
 {
+    /// <summary>
+    /// This is an example model for learning Iris dataset.
+    /// Current configuration is capable of achieving 100% accuracy on test data.
+    /// </summary>
     public class IrisNetwork
     {
         private const string DatasetsIrisTrainCsv = "../../datasets/iris/train.csv";
@@ -21,7 +25,7 @@ namespace NeuralNetwork.PreparedModels
             {
                 BatchSize = 10,
                 EpochCheckpoint = 1,
-                Epochs = 1000,
+                Epochs = 350,
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
@@ -30,7 +34,8 @@ namespace NeuralNetwork.PreparedModels
 
             ILayer[] layers =
             {
-                new SimpleLayer(1, Activation.None),
+                new SimpleLayer(5, Activation.Tanh),
+                new SimpleLayer(4, Activation.Tanh),
             };
 
             var network = new Network.NeuralNetwork(layers, descriptor);

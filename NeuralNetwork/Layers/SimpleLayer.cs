@@ -16,7 +16,7 @@ namespace NeuralNetwork.Layers
         public Function Layer(ref Function input, ref DeviceDescriptor device)
         {
             var glorotInit = CNTKLib.GlorotUniformInitializer(
-                CNTKLib.DefaultParamInitScale,
+                0.1,
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank, 1);
 
