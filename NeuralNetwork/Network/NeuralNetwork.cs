@@ -37,7 +37,7 @@ namespace NeuralNetwork.Network
             var labelStreamInfo = minibatchSource.StreamInfo(_descriptor.LabelsStreamName);
 
             var i = 0;
-            while (i <= _descriptor.Epochs)
+            while (i < _descriptor.Epochs)
             {
                 var minibatchData = minibatchSource.GetNextMinibatch(_descriptor.BatchSize, device);
 
