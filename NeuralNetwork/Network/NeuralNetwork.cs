@@ -90,8 +90,22 @@ namespace NeuralNetwork.Network
 
         private IList<Learner> GetLearners(ref Function model)
         {
-            var learningRatePerSample = new TrainingParameterScheduleDouble(_descriptor.LearningRatePerSample, 1);
-            return new List<Learner> {Learner.SGDLearner(model.Parameters(), learningRatePerSample)};
+            TrainingParameterScheduleDouble trainingSchedule;
+            if (_descriptor.DynamicLearningRate != null && _descriptor.LearningPerEpochs > 0)
+            {
+                var vector = new VectorPairSizeTDouble();
+                foreach (var pair in _descriptor.DynamicLearningRate)
+                {
+                    var rate = new PairSizeTDouble(pair.Multyplier, pair.Rate);
+                    vector.Add(rate);
+                }
+                trainingSchedule = new TrainingParameterScheduleDouble(vector, _descriptor.LearningPerEpochs);
+            }
+            else
+            {
+                trainingSchedule = new TrainingParameterScheduleDouble(_descriptor.LearningRatePerSample, _descriptor.LearningPerEpochs);
+            }
+            return new List<Learner> {Learner.SGDLearner(model.Parameters(), trainingSchedule)};
         }
 
         private Function GetModel(ref Variable features, ref DeviceDescriptor device)

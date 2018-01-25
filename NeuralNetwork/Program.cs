@@ -15,6 +15,9 @@ namespace NeuralNetwork
 
             var irisNetwork = new IrisNetwork(args[0]);
             irisNetwork.Train();
+
+//            var xorNetwork = new XorNetwork(args[0]);
+//            xorNetwork.Train();
         }
     }
 }

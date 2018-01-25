@@ -1,8 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace NeuralNetwork.Network
 {
+    public struct DynamicRate
+    {
+        public uint Multyplier;
+        public double Rate;
+
+        public DynamicRate(uint multyplier, double rate)
+        {
+            Multyplier = multyplier;
+            Rate = rate;
+        }
+    }
+    
     public class NetworkDescriptor
     {
         private const string DateTimeFormat = "yyyy-MM-dd-HH-mm";
@@ -26,6 +39,8 @@ namespace NeuralNetwork.Network
         public string FeaturesStreamName { get; set; } = "features";
         public string LabelsStreamName { get; set; } = "labels";
         public float LearningRatePerSample { get; set; } = 0.00125f;
+        public IList<DynamicRate> DynamicLearningRate { get; set; } = new List<DynamicRate>();
+        public uint LearningPerEpochs { get; set; } = 10;
         public string TrainDataPath { get; }
         public string TestDataPath { get; }
         private string CheckpointPath { get; }
