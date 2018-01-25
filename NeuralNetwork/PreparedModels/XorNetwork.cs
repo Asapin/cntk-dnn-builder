@@ -9,8 +9,8 @@ namespace NeuralNetwork.PreparedModels
     /// </summary>
     public class XorNetwork
     {
-        private const string XorTrainDataset = "../../datasets/xor/train.csv";
-        private const string XorTestDataset = "../../datasets/xor/test.csv";
+        private const string XorTrainDataset = "../../Datasets/xor/train.csv";
+        private const string XorTestDataset = "../../Datasets/xor/test.csv";
 
         private readonly string _checkpointPath;
 

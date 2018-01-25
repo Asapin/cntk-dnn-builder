@@ -9,8 +9,8 @@ namespace NeuralNetwork.PreparedModels
     /// </summary>
     public class IrisNetwork
     {
-        private const string IrisTrainDataset = "../../datasets/iris/train.csv";
-        private const string IrisTestDataset = "../../datasets/iris/test.csv";
+        private const string IrisTrainDataset = "../../Datasets/iris/train.csv";
+        private const string IrisTestDataset = "../../Datasets/iris/test.csv";
 
         private readonly string _checkpointPath;
 

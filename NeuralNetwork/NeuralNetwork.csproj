@@ -66,10 +66,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="datasets\iris\test.csv" />
-    <Content Include="datasets\iris\train.csv" />
-    <Content Include="datasets\xor\test.csv" />
-    <Content Include="datasets\xor\train.csv" />
+    <Content Include="Datasets\iris\test.csv" />
+    <Content Include="Datasets\iris\train.csv" />
+    <Content Include="Datasets\xor\test.csv" />
+    <Content Include="Datasets\xor\train.csv" />
+    <Content Include="Results\xor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\CNTK.GPU.2.3.0\build\net45\CNTK.GPU.targets" Condition="Exists('..\packages\CNTK.GPU.2.3.0\build\net45\CNTK.GPU.targets')" />
