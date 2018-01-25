@@ -91,7 +91,7 @@ namespace NeuralNetwork.Network
         private IList<Learner> GetLearners(ref Function model)
         {
             TrainingParameterScheduleDouble trainingSchedule;
-            if (_descriptor.DynamicLearningRate != null && _descriptor.LearningPerEpochs > 0)
+            if (_descriptor.DynamicLearningRate != null && _descriptor.DynamicLearningRate.Count > 0)
             {
                 var vector = new VectorPairSizeTDouble();
                 foreach (var pair in _descriptor.DynamicLearningRate)

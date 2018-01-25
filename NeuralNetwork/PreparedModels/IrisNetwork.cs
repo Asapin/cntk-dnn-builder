@@ -25,11 +25,11 @@ namespace NeuralNetwork.PreparedModels
             {
                 BatchSize = 10,
                 EpochCheckpoint = 1,
-                Epochs = 350,
+                Epochs = 100,
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
-                LearningRatePerSample = 0.00125f
+                LearningRatePerSample = 0.0281f
             };
 
             ILayer[] layers =

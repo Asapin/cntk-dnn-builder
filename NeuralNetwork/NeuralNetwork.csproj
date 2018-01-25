@@ -70,6 +70,7 @@
     <Content Include="Datasets\iris\train.csv" />
     <Content Include="Datasets\xor\test.csv" />
     <Content Include="Datasets\xor\train.csv" />
+    <Content Include="Results\iris.png" />
     <Content Include="Results\xor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
