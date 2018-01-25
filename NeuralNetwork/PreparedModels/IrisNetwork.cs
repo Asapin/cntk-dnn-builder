@@ -9,8 +9,8 @@ namespace NeuralNetwork.PreparedModels
     /// </summary>
     public class IrisNetwork
     {
-        private const string DatasetsIrisTrainCsv = "../../datasets/iris/train.csv";
-        private const string DatasetsIrisTestCsv = "../../datasets/iris/test.csv";
+        private const string IrisTrainDataset = "../../datasets/iris/train.csv";
+        private const string IrisTestDataset = "../../datasets/iris/test.csv";
 
         private readonly string _checkpointPath;
 
@@ -21,7 +21,7 @@ namespace NeuralNetwork.PreparedModels
 
         public void Train()
         {
-            var descriptor = new NetworkDescriptor(DatasetsIrisTrainCsv, DatasetsIrisTestCsv, _checkpointPath, NetworkType.Onehot, 4, 3)
+            var descriptor = new NetworkDescriptor(IrisTrainDataset, IrisTestDataset, _checkpointPath, NetworkType.Onehot, 4, 3)
             {
                 BatchSize = 10,
                 EpochCheckpoint = 1,
