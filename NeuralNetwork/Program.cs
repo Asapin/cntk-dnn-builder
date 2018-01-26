@@ -13,11 +13,14 @@ namespace NeuralNetwork
                 return;
             }
 
-            var irisNetwork = new IrisNetwork(args[0]);
-            irisNetwork.Train();
+//            var irisNetwork = new IrisNetwork(args[0]);
+//            irisNetwork.Train();
 
 //            var xorNetwork = new XorNetwork(args[0]);
 //            xorNetwork.Train();
+            
+            var mnistNetwork = new MnistNetwork(args[0]);
+            mnistNetwork.Train();
         }
     }
 }

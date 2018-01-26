@@ -2,3 +2,5 @@
 NeuralNetwork/bin/
 NeuralNetwork/obj/
 packages/
+NeuralNetwork/Datasets/mnist/test.csv
+NeuralNetwork/Datasets/mnist/train.csv
