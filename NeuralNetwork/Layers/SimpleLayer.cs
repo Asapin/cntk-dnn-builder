@@ -1,4 +1,5 @@
-﻿using CNTK;
+﻿using System;
+using CNTK;
 
 namespace NeuralNetwork.Layers
 {
@@ -15,12 +16,11 @@ namespace NeuralNetwork.Layers
 
         public Function Layer(ref Function input, ref DeviceDescriptor device)
         {
+            var inputVar = (Variable) input;
             var glorotInit = CNTKLib.GlorotUniformInitializer(
-                0.1,
+                Math.Sqrt(1.0 / inputVar.Shape[0]),
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank, 1);
-
-            var inputVar = (Variable) input;
 
             var shape = new[] { _outputDimesion, inputVar.Shape[0] };
             var weightParam = new Parameter(shape, DataType.Float, glorotInit, device, "weight");
