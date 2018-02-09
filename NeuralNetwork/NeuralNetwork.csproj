@@ -52,6 +52,7 @@
     <Compile Include="Layers\OnehotOutputLayer.cs" />
     <Compile Include="Layers\RegressionOutputLayer.cs" />
     <Compile Include="Layers\SimpleLayer.cs" />
+    <Compile Include="Network\StatisticsCalculator.cs" />
     <Compile Include="Network\NetworkDescriptor.cs" />
     <Compile Include="Network\NetworkEvaluator.cs" />
     <Compile Include="Network\NetworkType.cs" />

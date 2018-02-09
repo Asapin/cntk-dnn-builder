@@ -37,6 +37,7 @@ namespace NeuralNetwork.Network
             var labelStreamInfo = minibatchSource.StreamInfo(_descriptor.LabelsStreamName);
 
             var i = 0;
+            var statsCalc = new StatisticsCalculator();
             while (i < _descriptor.Epochs)
             {
                 var minibatchData = minibatchSource.GetNextMinibatch(_descriptor.BatchSize, device);
@@ -48,18 +49,21 @@ namespace NeuralNetwork.Network
                 };
 
                 trainer.TrainMinibatch(arguments, device);
+                statsCalc.LogStats(ref trainer);
 
                 if (!minibatchData.Values.Any(a => a.sweepEnd)) continue;
 
                 i++;
                 if (i % _descriptor.EpochCheckpoint == 0)
                 {
-                    DumpNetwork(ref classifierOutput, ref device, ref trainer, i);
+                    EvaluateAndDumpNetwork(ref classifierOutput, ref device, ref trainer, i, statsCalc);
                 }
+                statsCalc.Reset();
             }
         }
         
-        private void DumpNetwork(ref Function networkModel, ref DeviceDescriptor device, ref Trainer trainer, int epoch)
+        private void EvaluateAndDumpNetwork(ref Function networkModel, ref DeviceDescriptor device, ref Trainer trainer, 
+            int epoch, StatisticsCalculator statsCalc)
         {
             var accuracy = float.NaN;
             if (_descriptor.Evaluate)
@@ -67,7 +71,7 @@ namespace NeuralNetwork.Network
                 accuracy = _evaluator.EvaluateModel(ref networkModel, ref device);
             }
 
-            var info = $"{DateTime.Now}, {epoch}, {accuracy}, {trainer.PreviousMinibatchLossAverage()}";
+            var info = $"{DateTime.Now}, {epoch}, {accuracy}, {statsCalc.GetAverageLoss()}, {statsCalc.GetEvaluationAverage()}";
             Console.WriteLine(info);
 
             File.AppendAllLines(Path.Combine(_descriptor.CheckpointSavePath, "info.csv"), new []{ info });
