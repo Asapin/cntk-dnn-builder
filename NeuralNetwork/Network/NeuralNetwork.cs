@@ -94,7 +94,8 @@ namespace NeuralNetwork.Network
 
         private IList<Learner> GetLearners(ref Function model)
         {
-            TrainingParameterScheduleDouble trainingSchedule;
+            TrainingParameterScheduleDouble learningRateSchedule;
+            var momentumSchedule = new TrainingParameterScheduleDouble(_descriptor.MomentumPerSample);
             if (_descriptor.DynamicLearningRate != null && _descriptor.DynamicLearningRate.Count > 0)
             {
                 var vector = new VectorPairSizeTDouble();
@@ -103,13 +104,13 @@ namespace NeuralNetwork.Network
                     var rate = new PairSizeTDouble(pair.Multyplier, pair.Rate);
                     vector.Add(rate);
                 }
-                trainingSchedule = new TrainingParameterScheduleDouble(vector, _descriptor.LearningPerEpochs);
+                learningRateSchedule = new TrainingParameterScheduleDouble(vector, _descriptor.EpochSize);
             }
             else
             {
-                trainingSchedule = new TrainingParameterScheduleDouble(_descriptor.LearningRatePerSample, _descriptor.LearningPerEpochs);
+                learningRateSchedule = new TrainingParameterScheduleDouble(_descriptor.LearningRatePerSample);
             }
-            return new List<Learner> {Learner.SGDLearner(model.Parameters(), trainingSchedule)};
+            return new List<Learner> {Learner.MomentumSGDLearner(model.Parameters(), learningRateSchedule, momentumSchedule, false)};
         }
 
         private Function GetModel(ref Variable features, ref DeviceDescriptor device)

@@ -39,8 +39,9 @@ namespace NeuralNetwork.Network
         public string FeaturesStreamName { get; set; } = "features";
         public string LabelsStreamName { get; set; } = "labels";
         public float LearningRatePerSample { get; set; } = 0.00125f;
+        public float MomentumPerSample { get; set; } = 0.9f;
         public IList<DynamicRate> DynamicLearningRate { get; set; } = new List<DynamicRate>();
-        public uint LearningPerEpochs { get; set; } = 10;
+        public uint EpochSize { get; set; } = 100;
         public string TrainDataPath { get; }
         public string TestDataPath { get; }
         private string CheckpointPath { get; }
