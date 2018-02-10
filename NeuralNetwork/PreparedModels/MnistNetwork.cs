@@ -30,7 +30,7 @@ namespace NeuralNetwork.PreparedModels
             var descriptor = new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, _checkpointPath, NetworkType.Onehot, 28 * 28, 10)
             {
                 BatchSize = 200,
-                EpochCheckpoint = 1,
+                EvaluateFrequency = 1,
                 Epochs = 50,
                 Evaluate = true,
                 FeaturesStreamName = "features",

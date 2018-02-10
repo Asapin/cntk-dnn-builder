@@ -54,10 +54,7 @@ namespace NeuralNetwork.Network
                 if (!minibatchData.Values.Any(a => a.sweepEnd)) continue;
 
                 i++;
-                if (i % _descriptor.EpochCheckpoint == 0)
-                {
-                    EvaluateAndDumpNetwork(ref classifierOutput, ref device, ref trainer, i, statsCalc);
-                }
+                EvaluateAndDumpNetwork(ref classifierOutput, ref device, ref trainer, i, statsCalc);
                 statsCalc.Reset();
             }
         }
@@ -66,7 +63,7 @@ namespace NeuralNetwork.Network
             int epoch, StatisticsCalculator statsCalc)
         {
             var accuracy = float.NaN;
-            if (_descriptor.Evaluate)
+            if (epoch % _descriptor.EvaluateFrequency == 0 && _descriptor.Evaluate)
             {
                 accuracy = _evaluator.EvaluateModel(ref networkModel, ref device);
             }
@@ -76,7 +73,7 @@ namespace NeuralNetwork.Network
 
             File.AppendAllLines(Path.Combine(_descriptor.CheckpointSavePath, "info.csv"), new []{ info });
 
-            if (epoch % 10 != 0) return;
+            if (epoch % _descriptor.CheckpointFrequency != 0) return;
 
             var epochPath = Path.Combine(_descriptor.CheckpointSavePath, epoch.ToString());
             trainer.SaveCheckpoint(Path.Combine(epochPath, "model"));

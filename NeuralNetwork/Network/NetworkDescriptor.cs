@@ -35,7 +35,8 @@ namespace NeuralNetwork.Network
         public int Epochs { get; set; } = 5000;
         public uint BatchSize { get; set; } = 100;
         public bool Evaluate { get; set; } = true;
-        public int EpochCheckpoint { get; set; } = 10;
+        public int EvaluateFrequency { get; set; } = 10;
+        public int CheckpointFrequency { get; set; } = 10;
         public string FeaturesStreamName { get; set; } = "features";
         public string LabelsStreamName { get; set; } = "labels";
         public float LearningRatePerSample { get; set; } = 0.00125f;

@@ -24,7 +24,7 @@ namespace NeuralNetwork.PreparedModels
             var descriptor = new NetworkDescriptor(XorTrainDataset, XorTestDataset, _checkpointPath, NetworkType.Onehot, 2, 2)
             {
                 BatchSize = 4,
-                EpochCheckpoint = 1,
+                EvaluateFrequency = 1,
                 Epochs = 130,
                 Evaluate = true,
                 FeaturesStreamName = "features",

@@ -24,7 +24,7 @@ namespace NeuralNetwork.PreparedModels
             var descriptor = new NetworkDescriptor(IrisTrainDataset, IrisTestDataset, _checkpointPath, NetworkType.Onehot, 4, 3)
             {
                 BatchSize = 10,
-                EpochCheckpoint = 1,
+                EvaluateFrequency = 1,
                 Epochs = 100,
                 Evaluate = true,
                 FeaturesStreamName = "features",
