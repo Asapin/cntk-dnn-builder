@@ -34,7 +34,7 @@ namespace NeuralNetwork.PreparedModels
 
             ILayer[] layers =
             {
-                new SimpleLayer(8, Activation.ReLU),
+                new SimpleLayer(8, Activation.ReLU)
             };
 
             var network = new Network.NeuralNetwork(layers, descriptor);
