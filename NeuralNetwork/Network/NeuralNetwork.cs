@@ -86,7 +86,13 @@ namespace NeuralNetwork.Network
 
             var learners = GetLearners(ref model);
 
-            return Trainer.CreateTrainer(model, trainingLoss, prediction, learners);
+            var trainer = Trainer.CreateTrainer(model, trainingLoss, prediction, learners);
+
+            if (string.IsNullOrEmpty(_descriptor.ModelCheckpointPath)) return trainer;
+
+            Console.WriteLine($"Resoring from checkpoint {_descriptor.ModelCheckpointPath}");
+            trainer.RestoreFromCheckpoint(_descriptor.ModelCheckpointPath);
+            return trainer;
         }
 
         private IList<Learner> GetLearners(ref Function model)

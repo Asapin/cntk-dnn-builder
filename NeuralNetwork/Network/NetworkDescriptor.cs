@@ -45,6 +45,7 @@ namespace NeuralNetwork.Network
         public uint EpochSize { get; set; } = 100;
         public string TrainDataPath { get; }
         public string TestDataPath { get; }
+        public string ModelCheckpointPath { get; set;  }
         private string CheckpointPath { get; }
         public NetworkType Type { get; }
         public int InputDimension { get; }
