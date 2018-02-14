@@ -113,7 +113,16 @@ namespace NeuralNetwork.Network
             {
                 learningRateSchedule = new TrainingParameterScheduleDouble(_descriptor.LearningRatePerSample);
             }
-            return new List<Learner> {Learner.MomentumSGDLearner(model.Parameters(), learningRateSchedule, momentumSchedule, false)};
+
+            AdditionalLearningOptions learningOptions = null;
+            if (!float.IsNaN(_descriptor.L2RegularizationWeight))
+            {
+                learningOptions = new AdditionalLearningOptions
+                {
+                    l2RegularizationWeight = _descriptor.L2RegularizationWeight
+                };
+            }
+            return new List<Learner> {Learner.MomentumSGDLearner(model.Parameters(), learningRateSchedule, momentumSchedule, false, learningOptions)};
         }
 
         private Function GetModel(ref Variable features, ref DeviceDescriptor device)
