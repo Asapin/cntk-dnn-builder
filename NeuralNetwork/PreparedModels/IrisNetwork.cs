@@ -29,7 +29,7 @@ namespace NeuralNetwork.PreparedModels
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
-                LearningRatePerSample = 0.0281f
+                LearningRatePerSample = 0.0015f
             };
 
             ILayer[] layers =
