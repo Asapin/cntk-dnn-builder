@@ -51,7 +51,7 @@ namespace NeuralNetwork.PreparedModels
             {
                 new SimpleLayer(2000, Activation.LeakyReLU),
                 new SimpleLayer(1500, Activation.LeakyReLU),
-                new SimpleLayer(1000, Activation.Tanh, true)
+                new BatchNormalizationLayer(1000, Activation.Tanh), 
             };
 
             var network = new Network.NeuralNetwork(layers, descriptor);
