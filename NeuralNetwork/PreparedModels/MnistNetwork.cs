@@ -50,8 +50,8 @@ namespace NeuralNetwork.PreparedModels
 
             ILayer[] layers =
             {
-                new SimpleLayer(2000, Activation.LeakyReLU),
-                new SimpleLayer(1500, Activation.LeakyReLU),
+                new FullyConnectedLayer(Activation.LeakyReLU, 2000),
+                new FullyConnectedLayer(Activation.LeakyReLU, 1500),
                 new DropoutLayer(0.2), 
                 new BatchNormalizationLayer(1000, Activation.Tanh), 
             };

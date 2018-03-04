@@ -1,21 +1,28 @@
-﻿using CNTK;
+﻿using System.Linq;
+using CNTK;
 
 namespace NeuralNetwork.Layers
 {
-    public class SimpleLayer : AbstractLayer
+    public class FullyConnectedLayer : AbstractLayer
     {
         private readonly int _outputDimesion;
         private readonly Activation.Apply _activation;
 
-        public SimpleLayer(int outputDimesion, Activation.Apply activation)
+        public FullyConnectedLayer(Activation.Apply activation, int outputDimesion)
         {
-            _outputDimesion = outputDimesion;
             _activation = activation;
+            _outputDimesion = outputDimesion;
         }
 
         public override Function Layer(ref Function input, ref DeviceDescriptor device)
         {
             var inputVar = (Variable) input;
+            if (inputVar.Shape.Rank != 1)
+            {
+                var newDim = inputVar.Shape.Dimensions.Aggregate((d1, d2) => d1 * d2);
+                inputVar = CNTKLib.Reshape(inputVar, new[] { newDim });
+            }
+
             var glorotInit = GetGlorotUniformInitializer(ref input);
 
             var shape = new[] { _outputDimesion, inputVar.Shape[0] };
