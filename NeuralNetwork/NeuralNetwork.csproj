@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation.cs" />
+    <Compile Include="Layers\AbstractLayer.cs" />
     <Compile Include="Layers\BatchNormalizationLayer.cs" />
     <Compile Include="Layers\ConvolutionLayer.cs" />
     <Compile Include="Layers\DropoutLayer.cs" />

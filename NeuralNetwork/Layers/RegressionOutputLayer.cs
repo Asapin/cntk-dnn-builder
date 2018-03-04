@@ -2,7 +2,7 @@
 
 namespace NeuralNetwork.Layers
 {
-    public class RegressionOutputLayer : ILayer
+    public class RegressionOutputLayer : AbstractLayer
     {
         private readonly int _outputDimesion;
 
@@ -11,14 +11,10 @@ namespace NeuralNetwork.Layers
             _outputDimesion = outputDimesion;
         }
 
-        public Function Layer(ref Function input, ref DeviceDescriptor device)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device)
         {
-            var glorotInit = CNTKLib.GlorotUniformInitializer(
-                0.01,
-                CNTKLib.SentinelValueForInferParamInitRank,
-                CNTKLib.SentinelValueForInferParamInitRank, 1);
-            
             var inputVar = (Variable) input;
+            var glorotInit = GetGlorotUniformInitializer(ref input);
 
             var shape = new[] { _outputDimesion, inputVar.Shape[0] };
             var weightParam = new Parameter(shape, DataType.Float, glorotInit, device, "weight");

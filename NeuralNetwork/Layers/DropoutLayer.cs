@@ -2,7 +2,7 @@
 
 namespace NeuralNetwork.Layers
 {
-    public class DropoutLayer : ILayer
+    public class DropoutLayer : AbstractLayer
     {
         private readonly double _dropoutRate;
 
@@ -11,7 +11,7 @@ namespace NeuralNetwork.Layers
             _dropoutRate = dropoutRate;
         }
 
-        public Function Layer(ref Function input, ref DeviceDescriptor device)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device)
         {
             return CNTKLib.Dropout(input, _dropoutRate);
         }

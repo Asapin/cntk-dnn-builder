@@ -2,7 +2,7 @@
 
 namespace NeuralNetwork.Layers
 {
-    public class BatchNormalizationLayer : ILayer
+    public class BatchNormalizationLayer : AbstractLayer
     {
         private readonly Activation.Apply _activation;
         private readonly bool _spatial;
@@ -15,15 +15,12 @@ namespace NeuralNetwork.Layers
             _bnTimeConst = bnTimeConst;
         }
 
-        public Function Layer(ref Function input, ref DeviceDescriptor device)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device)
         {
-            var initializer = CNTKLib.GlorotUniformInitializer(
-                0.01,
-                CNTKLib.SentinelValueForInferParamInitRank,
-                CNTKLib.SentinelValueForInferParamInitRank, 1);
+            var glorotInit = GetGlorotUniformInitializer(ref input);
 
-            var biasParams = new Parameter(new[] { NDShape.InferredDimension }, DataType.Float, initializer, device);
-            var scaleParams = new Parameter(new[] { NDShape.InferredDimension }, DataType.Float, initializer, device);
+            var biasParams = new Parameter(new[] { NDShape.InferredDimension }, DataType.Float, glorotInit, device);
+            var scaleParams = new Parameter(new[] { NDShape.InferredDimension }, DataType.Float, glorotInit, device);
             var runningMean = new Constant(new[] { NDShape.InferredDimension }, 0.0f, device);
             var runningInvStd = new Constant(new[] { NDShape.InferredDimension }, 0.0f, device);
             var runningCount = Constant.Scalar(0.0f, device);

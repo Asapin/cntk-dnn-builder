@@ -2,7 +2,7 @@
 
 namespace NeuralNetwork.Layers
 {
-    public class ConvolutionLayer : ILayer
+    public class ConvolutionLayer : AbstractLayer
     {        
         private readonly Activation.Apply _activation;
         private readonly int _kernelWidth;
@@ -12,7 +12,7 @@ namespace NeuralNetwork.Layers
         private readonly int _vStride;
 
         public ConvolutionLayer(Activation.Apply activation, int kernelWidth, int kernelHeight, 
-            int outFeatureMapCount, int hStride, int vStride)
+            int outFeatureMapCount, int hStride = 1, int vStride = 1)
         {
             _activation = activation;
             _kernelWidth = kernelWidth;
@@ -22,19 +22,15 @@ namespace NeuralNetwork.Layers
             _vStride = vStride;
         }
 
-        public Function Layer(ref Function input, ref DeviceDescriptor device)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device)
         {
             var inputVar = (Variable) input;
+            var glorotInit = GetGlorotUniformInitializer(ref input);
 
             var numInputChannels = inputVar.Shape[inputVar.Shape.Rank - 1];
-            
-            var initializer = CNTKLib.GlorotUniformInitializer(
-                0.01,
-                CNTKLib.SentinelValueForInferParamInitRank,
-                CNTKLib.SentinelValueForInferParamInitRank, 1);
 
             var convParams = new Parameter(new[] { _kernelWidth, _kernelHeight, numInputChannels, _outFeatureMapCount },
-                DataType.Float, initializer, device);
+                DataType.Float, glorotInit, device);
 
             var convFunction = CNTKLib.Convolution(convParams, inputVar, new[] { _hStride, _vStride, numInputChannels });
 
