@@ -24,8 +24,8 @@ namespace NeuralNetwork.Network
         {
             var device = DeviceDescriptor.UseDefaultDevice();
             Console.WriteLine($"CNTK, using {device.Type}");
-            
-            var features = Variable.InputVariable(new[] { _descriptor.InputDimension }, DataType.Float, _descriptor.FeaturesStreamName);
+
+            var features = Variable.InputVariable(_descriptor.InputDimension, DataType.Float, _descriptor.FeaturesStreamName);
             var labels = Variable.InputVariable(new[] { _descriptor.OutputClasses }, DataType.Float, _descriptor.LabelsStreamName);
 
             var classifierOutput = GetModel(ref features, ref device);

@@ -22,7 +22,7 @@ namespace NeuralNetwork.Network
         private readonly DateTime _dateTime = DateTime.Now;
 
         public NetworkDescriptor(string trainDataPath, string testDataPath, string checkpointPath, NetworkType type, 
-            int inputDimension, int outputClasses)
+            int[] inputDimension, int outputClasses)
         {
             TrainDataPath = trainDataPath;
             TestDataPath = testDataPath;
@@ -49,7 +49,7 @@ namespace NeuralNetwork.Network
         public string ModelCheckpointPath { get; set;  }
         private string CheckpointPath { get; }
         public NetworkType Type { get; }
-        public int InputDimension { get; }
+        public int[] InputDimension { get; }
         public int OutputClasses { get; }
 
         public string CheckpointSavePath

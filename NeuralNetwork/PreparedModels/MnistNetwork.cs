@@ -28,7 +28,8 @@ namespace NeuralNetwork.PreparedModels
             Console.WriteLine("Preparing MNIST dataset...");
             DownloadUtils.DownloadMnist();
             Console.WriteLine("Preparing MNIST dataset finished.");
-            var descriptor = new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, _checkpointPath, NetworkType.Onehot, 28 * 28, 10)
+            var descriptor = new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, _checkpointPath, 
+                NetworkType.Onehot, new[] { 28 * 28 }, 10)
             {
                 BatchSize = 256,
                 EvaluateFrequency = 1,

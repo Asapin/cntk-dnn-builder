@@ -21,7 +21,8 @@ namespace NeuralNetwork.PreparedModels
         
         public void Train()
         {
-            var descriptor = new NetworkDescriptor(XorTrainDataset, XorTestDataset, _checkpointPath, NetworkType.Onehot, 2, 2)
+            var descriptor = new NetworkDescriptor(XorTrainDataset, XorTestDataset, _checkpointPath, 
+                NetworkType.Onehot, new[] { 2 }, 2)
             {
                 BatchSize = 4,
                 EvaluateFrequency = 1,

@@ -21,7 +21,8 @@ namespace NeuralNetwork.PreparedModels
 
         public void Train()
         {
-            var descriptor = new NetworkDescriptor(IrisTrainDataset, IrisTestDataset, _checkpointPath, NetworkType.Onehot, 4, 3)
+            var descriptor = new NetworkDescriptor(IrisTrainDataset, IrisTestDataset, _checkpointPath, 
+                NetworkType.Onehot, new[] { 4 }, 3)
             {
                 BatchSize = 10,
                 EvaluateFrequency = 1,

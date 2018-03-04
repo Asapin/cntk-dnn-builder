@@ -9,7 +9,7 @@ namespace NeuralNetwork.Layers
         {
             var inputVar = (Variable) input;
             return CNTKLib.GlorotUniformInitializer(
-                Math.Sqrt(1.0 / inputVar.Shape[0]),
+                Math.Sqrt(1.0 / inputVar.Shape.TotalSize),
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank, 1);
         }
