@@ -47,6 +47,7 @@
     <Compile Include="Layers\DropoutLayer.cs" />
     <Compile Include="Layers\ILayer.cs" />
     <Compile Include="Layers\OnehotOutputLayer.cs" />
+    <Compile Include="Layers\PoolingLayer.cs" />
     <Compile Include="Layers\RegressionOutputLayer.cs" />
     <Compile Include="Layers\SimpleLayer.cs" />
     <Compile Include="Network\StatisticsCalculator.cs" />
