@@ -51,6 +51,7 @@ namespace NeuralNetwork.PreparedModels
             {
                 new SimpleLayer(2000, Activation.LeakyReLU),
                 new SimpleLayer(1500, Activation.LeakyReLU),
+                new DropoutLayer(0.2), 
                 new BatchNormalizationLayer(1000, Activation.Tanh), 
             };
 
