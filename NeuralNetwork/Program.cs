@@ -19,8 +19,11 @@ namespace NeuralNetwork
 //            var xorNetwork = new XorNetwork(args[0]);
 //            xorNetwork.Train();
             
-            var mnistNetwork = new MnistNetwork(args[0]);
-            mnistNetwork.Train();
+//            var mnistNetwork = new MnistNetwork(args[0]);
+//            mnistNetwork.Train();
+
+            var mnistConvNetwork = new MnistConvNetwork(args[0]);
+            mnistConvNetwork.Train();
         }
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="Network\NetworkUtils.cs" />
     <Compile Include="Network\NeuralNetwork.cs" />
     <Compile Include="PreparedModels\IrisNetwork.cs" />
+    <Compile Include="PreparedModels\MnistConvNetwork.cs" />
     <Compile Include="PreparedModels\MnistNetwork.cs" />
     <Compile Include="PreparedModels\XorNetwork.cs" />
     <Compile Include="Program.cs" />
