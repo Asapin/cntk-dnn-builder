@@ -32,8 +32,8 @@ namespace NeuralNetwork.PreparedModels
             {
                 BatchSize = 256,
                 EvaluateFrequency = 1,
-                CheckpointFrequency = 100,
-                Epochs = 50,
+                CheckpointFrequency = 150,
+                Epochs = 100,
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
