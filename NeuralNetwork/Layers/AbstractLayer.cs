@@ -5,11 +5,10 @@ namespace NeuralNetwork.Layers
 {
     public abstract class AbstractLayer : ILayer
     {
-        public CNTKDictionary GetGlorotUniformInitializer(ref Function input)
+        protected static CNTKDictionary GetGlorotUniformInitializer(ref Variable variable)
         {
-            var inputVar = (Variable) input;
             return CNTKLib.GlorotUniformInitializer(
-                Math.Sqrt(1.0 / inputVar.Shape.TotalSize),
+                Math.Sqrt(1.0 / variable.Shape.TotalSize),
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank, 1);
         }

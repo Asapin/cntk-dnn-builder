@@ -23,7 +23,7 @@ namespace NeuralNetwork.Layers
                 inputVar = CNTKLib.Reshape(inputVar, new[] { newDim });
             }
 
-            var glorotInit = GetGlorotUniformInitializer(ref input);
+            var glorotInit = GetGlorotUniformInitializer(ref inputVar);
 
             var shape = new[] { _outputDimesion, inputVar.Shape[0] };
             var weightParam = new Parameter(shape, DataType.Float, glorotInit, device, "weight");

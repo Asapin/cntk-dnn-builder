@@ -27,7 +27,7 @@ namespace NeuralNetwork.Layers
         public override Function Layer(ref Function input, ref DeviceDescriptor device)
         {
             var inputVar = (Variable) input;
-            var glorotInit = GetGlorotUniformInitializer(ref input);
+            var glorotInit = GetGlorotUniformInitializer(ref inputVar);
 
             var numInputChannels = inputVar.Shape[inputVar.Shape.Rank - 1];
 
