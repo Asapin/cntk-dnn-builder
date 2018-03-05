@@ -53,7 +53,7 @@ namespace NeuralNetwork.PreparedModels
                 new FullyConnectedLayer(Activation.LeakyReLU, 2000),
                 new FullyConnectedLayer(Activation.LeakyReLU, 1500),
                 new DropoutLayer(0.2), 
-                new BatchNormalizationLayer(1000, Activation.Tanh), 
+                new BatchNormalizationLayer(Activation.Tanh, 1000), 
             };
 
             var network = new Network.NeuralNetwork(layers, descriptor);

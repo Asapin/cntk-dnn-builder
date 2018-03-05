@@ -8,10 +8,10 @@ namespace NeuralNetwork.Layers
         private readonly Activation.Apply _activation;
         private readonly bool _spatial;
 
-        public BatchNormalizationLayer(int outputDimesion, Activation.Apply activation, bool spatial = false)
+        public BatchNormalizationLayer(Activation.Apply activation, int outputDimesion, bool spatial = false)
         {
-            _outputDimesion = outputDimesion;
             _activation = activation;
+            _outputDimesion = outputDimesion;
             _spatial = spatial;
         }
 
