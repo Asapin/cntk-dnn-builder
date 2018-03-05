@@ -25,8 +25,11 @@ namespace NeuralNetwork.Layers
         public override Function Layer(ref Function input, ref DeviceDescriptor device)
         {
             var inputVar = (Variable) input;
-            return CNTKLib.Pooling(inputVar, _poolingType, new[] { _hFilterSize, _vFilterSize }, 
+            var result = CNTKLib.Pooling(inputVar, _poolingType, new[] { _hFilterSize, _vFilterSize }, 
                 new[] { _hStride, _vStride }, new[] { _padding });
+            
+            LogShape(ref result, "Pooling");
+            return result;
         }
     }
 }

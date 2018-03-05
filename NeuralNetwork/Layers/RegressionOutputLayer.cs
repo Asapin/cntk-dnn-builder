@@ -21,6 +21,8 @@ namespace NeuralNetwork.Layers
             var biasParam = new Parameter(new NDShape(1 ,_outputDimesion), 0, device, "bias");
 
             var result = CNTKLib.Times(weightParam, inputVar) + biasParam;
+            
+            LogShape(ref result, "Regression");
 
             return result;
         }

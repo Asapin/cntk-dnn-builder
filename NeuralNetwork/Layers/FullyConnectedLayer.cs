@@ -31,6 +31,8 @@ namespace NeuralNetwork.Layers
             var result = CNTKLib.Times(weightParam, inputVar);
             var biasParam = new Parameter(new[] { NDShape.InferredDimension }, 0, device, "bias");
             result += biasParam;
+            
+            LogShape(ref result, "Fully connected");
 
             return _activation(result);
         }

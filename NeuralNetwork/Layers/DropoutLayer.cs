@@ -13,7 +13,9 @@ namespace NeuralNetwork.Layers
 
         public override Function Layer(ref Function input, ref DeviceDescriptor device)
         {
-            return CNTKLib.Dropout(input, _dropoutRate);
+            var result = CNTKLib.Dropout(input, _dropoutRate);
+            LogShape(ref result, "Dropout");
+            return result;
         }
     }
 }

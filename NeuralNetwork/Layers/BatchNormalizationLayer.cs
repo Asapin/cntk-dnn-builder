@@ -32,6 +32,8 @@ namespace NeuralNetwork.Layers
 
             result = CNTKLib.BatchNormalization(result, gammaParam, betaParam, runningMean, runningInvStd,
                 runningCount, _spatial);
+            
+            LogShape(ref result, "Batch norm");
 
             return _activation(result);
         }

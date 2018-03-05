@@ -34,10 +34,12 @@ namespace NeuralNetwork.Layers
             var convParams = new Parameter(new[] { _kernelWidth, _kernelHeight, numInputChannels, _filtersCount }, 
                 DataType.Float, glorotInit, device, "convParams");
 
-            var convFunction = CNTKLib.Convolution(convParams, inputVar, new[] { _hStride, _vStride, numInputChannels }, 
+            var result = CNTKLib.Convolution(convParams, inputVar, new[] { _hStride, _vStride, numInputChannels }, 
                 new[] { true }, new[] { _padding });
 
-            return _activation(convFunction);
+            LogShape(ref result, "Convolution");
+
+            return _activation(result);
         }
     }
 }
