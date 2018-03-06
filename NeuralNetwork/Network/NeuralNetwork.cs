@@ -90,7 +90,7 @@ namespace NeuralNetwork.Network
 
             if (string.IsNullOrEmpty(_descriptor.ModelCheckpointPath)) return trainer;
 
-            Console.WriteLine($"Resoring from checkpoint {_descriptor.ModelCheckpointPath}");
+            Console.WriteLine($"Restoring from checkpoint {_descriptor.ModelCheckpointPath}");
             trainer.RestoreFromCheckpoint(_descriptor.ModelCheckpointPath);
             return trainer;
         }
