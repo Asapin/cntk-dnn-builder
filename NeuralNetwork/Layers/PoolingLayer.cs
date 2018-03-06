@@ -22,13 +22,13 @@ namespace NeuralNetwork.Layers
             _padding = padding;
         }
 
-        public override Function Layer(ref Function input, ref DeviceDescriptor device)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath)
         {
             var inputVar = (Variable) input;
             var result = CNTKLib.Pooling(inputVar, _poolingType, new[] { _hFilterSize, _vFilterSize }, 
                 new[] { _hStride, _vStride }, new[] { _padding });
             
-            LogShape(ref result, "Pooling");
+            LogShape(ref result, checkpointSavePath, "Pooling");
             return result;
         }
     }

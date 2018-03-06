@@ -24,7 +24,7 @@ namespace NeuralNetwork.Layers
             _padding = padding;
         }
 
-        public override Function Layer(ref Function input, ref DeviceDescriptor device)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath)
         {
             var inputVar = (Variable) input;
             var glorotInit = GetGlorotUniformInitializer(ref inputVar);
@@ -37,7 +37,7 @@ namespace NeuralNetwork.Layers
             var result = CNTKLib.Convolution(convParams, inputVar, new[] { _hStride, _vStride, numInputChannels }, 
                 new[] { true }, new[] { _padding });
 
-            LogShape(ref result, "Convolution");
+            LogShape(ref result, checkpointSavePath, "Convolution");
 
             return _activation(result);
         }

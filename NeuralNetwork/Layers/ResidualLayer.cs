@@ -11,7 +11,7 @@ namespace NeuralNetwork.Layers
             _activation = activation;
         }
 
-        public override Function Layer(ref Function input, ref DeviceDescriptor device)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath)
         {
             var layer1 = GetLayer(ref input, ref device);
             var result1 = _activation(layer1);
@@ -22,7 +22,7 @@ namespace NeuralNetwork.Layers
             var layer2Var = (Variable) layer2;
 
             var result = layer2Var + inputVar;
-            LogShape(ref result, "Residual");
+            LogShape(ref result, checkpointSavePath, "Residual");
             return _activation(result);
         }
 

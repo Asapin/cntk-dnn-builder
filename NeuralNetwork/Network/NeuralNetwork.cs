@@ -130,17 +130,17 @@ namespace NeuralNetwork.Network
             Function model = features;
             foreach (var layer in _layers)
             {
-                model = layer.Layer(ref model, ref device);
+                model = layer.Layer(ref model, ref device, _descriptor.CheckpointSavePath);
             }
 
             switch (_descriptor.Type)
             {
                 case NetworkType.Onehot: 
                     var onehotLayer = new OnehotOutputLayer(_descriptor.OutputClasses);
-                    return onehotLayer.Layer(ref model, ref device);
+                    return onehotLayer.Layer(ref model, ref device, _descriptor.CheckpointSavePath);
                 case NetworkType.Regression:
                     var regressionLayer = new RegressionOutputLayer(_descriptor.OutputClasses);
-                    return regressionLayer.Layer(ref model, ref device);
+                    return regressionLayer.Layer(ref model, ref device, _descriptor.CheckpointSavePath);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
