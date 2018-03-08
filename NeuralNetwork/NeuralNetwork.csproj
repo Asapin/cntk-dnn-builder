@@ -50,6 +50,7 @@
     <Compile Include="Layers\PoolingLayer.cs" />
     <Compile Include="Layers\RegressionOutputLayer.cs" />
     <Compile Include="Layers\FullyConnectedLayer.cs" />
+    <Compile Include="Layers\ResidualConvolutionLayer.cs" />
     <Compile Include="Layers\ResidualLayer.cs" />
     <Compile Include="Network\StatisticsCalculator.cs" />
     <Compile Include="Network\NetworkDescriptor.cs" />
