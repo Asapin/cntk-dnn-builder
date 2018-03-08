@@ -44,8 +44,12 @@
     <Compile Include="Layers\AbstractLayer.cs" />
     <Compile Include="Layers\BatchNormalizationLayer.cs" />
     <Compile Include="Layers\ConvolutionLayer.cs" />
+    <Compile Include="Layers\Descriptors\Inception\ConvBlockDescriptor.cs" />
+    <Compile Include="Layers\Descriptors\Inception\PoolingBlockDescriptor.cs" />
+    <Compile Include="Layers\Descriptors\Inception\StartingPoolingBlockDescriptor.cs" />
     <Compile Include="Layers\DropoutLayer.cs" />
     <Compile Include="Layers\ILayer.cs" />
+    <Compile Include="Layers\InceptionLayer.cs" />
     <Compile Include="Layers\OnehotOutputLayer.cs" />
     <Compile Include="Layers\PoolingLayer.cs" />
     <Compile Include="Layers\RegressionOutputLayer.cs" />
