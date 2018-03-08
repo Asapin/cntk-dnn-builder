@@ -16,12 +16,21 @@ namespace NeuralNetwork.Layers
             var layer1 = GetLayer(ref input, ref device);
             var result1 = _activation(layer1);
 
-            var layer2 = GetLayer(ref result1, ref device);
+            Function result;
+            if (result1.Output.Shape.Equals(input.Output.Shape))
+            {
+                var layer2 = GetLayer(ref result1, ref device);
+                result = layer2 + (Variable) input;
+            }
+            else
+            {
+                var layer2 = GetLayer(ref result1, ref device);
+                var result2 = _activation(layer2);
 
-            var inputVar = (Variable) input;
-            var layer2Var = (Variable) layer2;
+                var layer3 = GetLayer(ref result2, ref device);
+                result = layer3 + (Variable) result1;
+            }
 
-            var result = layer2Var + inputVar;
             LogShape(ref result, checkpointSavePath, "Residual");
             return _activation(result);
         }
