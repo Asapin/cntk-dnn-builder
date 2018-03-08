@@ -38,15 +38,14 @@ namespace NeuralNetwork.PreparedModels
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
-                LearningRatePerSample = 0.00125f,
-                EpochSize = 5
+                LearningRatePerSample = 0.00125f
             };
 
             ILayer[] layers =
             {
-                new ConvolutionLayer(Activation.ReLU, 5, 5, 6),
+                new ResidualConvolutionLayer(Activation.ReLU, 5, 5, 6), 
                 new PoolingLayer(PoolingType.Max, 2, 2, 2, 2),
-                new ConvolutionLayer(Activation.ReLU, 3, 3, 16),
+                new ResidualConvolutionLayer(Activation.ReLU, 3, 3, 16),
                 new PoolingLayer(PoolingType.Max, 2, 2, 2, 2),
                 new DropoutLayer(0.5), 
                 new FullyConnectedLayer(Activation.ReLU, 120),
