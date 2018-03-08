@@ -14,7 +14,7 @@ namespace NeuralNetwork.Layers
             _outputDimesion = outputDimesion;
         }
 
-        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath, bool log = true)
         {
             var inputVar = (Variable) input;
             if (inputVar.Shape.Rank != 1)
@@ -32,7 +32,7 @@ namespace NeuralNetwork.Layers
             var biasParam = new Parameter(new[] { NDShape.InferredDimension }, 0, device, "bias");
             result += biasParam;
             
-            LogShape(ref result, checkpointSavePath, "Fully connected");
+            LogShape(ref result, checkpointSavePath, "Fully connected", log);
 
             return _activation(result);
         }

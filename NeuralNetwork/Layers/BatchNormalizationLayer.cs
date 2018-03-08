@@ -15,7 +15,7 @@ namespace NeuralNetwork.Layers
             _spatial = spatial;
         }
 
-        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath, bool log = true)
         {
             var inputVar = (Variable) input;
             var glorotInit = GetGlorotUniformInitializer(ref inputVar);
@@ -33,7 +33,7 @@ namespace NeuralNetwork.Layers
             result = CNTKLib.BatchNormalization(result, gammaParam, betaParam, runningMean, runningInvStd,
                 runningCount, _spatial);
             
-            LogShape(ref result, checkpointSavePath, "Batch norm");
+            LogShape(ref result, checkpointSavePath, "Batch norm", log);
 
             return _activation(result);
         }

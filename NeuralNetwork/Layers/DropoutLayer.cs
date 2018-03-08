@@ -11,10 +11,10 @@ namespace NeuralNetwork.Layers
             _dropoutRate = dropoutRate;
         }
 
-        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath, bool log = true)
         {
             var result = CNTKLib.Dropout(input, _dropoutRate);
-            LogShape(ref result, checkpointSavePath, "Dropout");
+            LogShape(ref result, checkpointSavePath, "Dropout", log);
             return result;
         }
     }

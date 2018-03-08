@@ -11,7 +11,7 @@ namespace NeuralNetwork.Layers
             _outputDimesion = outputDimesion;
         }
 
-        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath)
+        public override Function Layer(ref Function input, ref DeviceDescriptor device, string checkpointSavePath, bool log = true)
         {
             var inputVar = (Variable) input;
             var glorotInit = GetGlorotUniformInitializer(ref inputVar);
@@ -22,7 +22,7 @@ namespace NeuralNetwork.Layers
 
             var result = CNTKLib.Times(weightParam, inputVar) + biasParam;
             
-            LogShape(ref result, checkpointSavePath, "Regression");
+            LogShape(ref result, checkpointSavePath, "Regression", log);
 
             return result;
         }
