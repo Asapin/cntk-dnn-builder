@@ -142,7 +142,8 @@ namespace NeuralNetwork.Network
                     var regressionLayer = new RegressionOutputLayer(_descriptor.OutputClasses);
                     return regressionLayer.Layer(ref model, ref device, _descriptor.CheckpointSavePath);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    var fullyConnectedLayer = new FullyConnectedLayer(Activation.ReLU, _descriptor.OutputClasses);
+                    return fullyConnectedLayer.Layer(ref model, ref device, _descriptor.CheckpointSavePath);
             }
         }
     }
