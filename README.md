@@ -2,7 +2,7 @@
 This app allows you to build your own deep neural network by combining different layers without the need to implement them yourself.
 
 # How to use
-* [Install CNTK on your machine](https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine)
+* [Install CNTK 2.4.0 on your machine](https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine)
 * Create new class, that implements AbstractModel
 * Override methods ``Before``, ``GetNetworkDescriptor``, ``GetLayers``
 * Create new instance of your class, pass ``args[0]`` as a constructor parameter
