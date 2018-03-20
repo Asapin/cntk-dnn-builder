@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CNTK;
 using NeuralNetwork.Layers;
 using NeuralNetwork.Network;
@@ -11,24 +12,25 @@ namespace NeuralNetwork.PreparedModels
     /// The network automatically downloads MNIST train and text datasets, which are about 130 MB in size.
     /// Current configuration is capable of achieving ~99.3% accuracy on test data.
     /// </summary>
-    public class MnistConvNetwork
+    public class MnistConvModel : AbstractModel
     {
         private const string MnistTrainDataset = "../../Datasets/mnist/train.csv";
         private const string MnistTestDataset = "../../Datasets/mnist/test.csv";
 
-        private readonly string _checkpointPath;
-
-        public MnistConvNetwork(string checkpointPath)
+        public MnistConvModel(string checkpointPath) : base(checkpointPath)
         {
-            _checkpointPath = checkpointPath;
         }
 
-        public void Train()
+        protected override void Before()
         {
             Console.WriteLine("Preparing MNIST dataset...");
             DownloadUtils.DownloadMnist();
             Console.WriteLine("Preparing MNIST dataset finished.");
-            var descriptor = new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, _checkpointPath, 
+        }
+
+        protected override NetworkDescriptor GetNetworkDescriptor()
+        {
+            return new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, CheckpointPath, 
                 NetworkType.Onehot, new[] { 28, 28, 1 }, 10)
             {
                 BatchSize = 256,
@@ -40,7 +42,10 @@ namespace NeuralNetwork.PreparedModels
                 LabelsStreamName = "labels",
                 LearningRatePerSample = 0.00125f
             };
+        }
 
+        protected override IEnumerable<ILayer> GetLayers()
+        {
             ILayer[] layers =
             {
                 new ResidualConvolutionLayer(Activation.ReLU, 5, 5, 6), 
@@ -52,8 +57,7 @@ namespace NeuralNetwork.PreparedModels
                 new FullyConnectedLayer(Activation.ReLU, 84),
             };
 
-            var network = new Network.NeuralNetwork(layers, descriptor);
-            network.RunTraining();
+            return layers;
         }
     }
 }

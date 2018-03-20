@@ -13,17 +13,17 @@ namespace NeuralNetwork
                 return;
             }
 
-//            var irisNetwork = new IrisNetwork(args[0]);
-//            irisNetwork.Train();
+//            var irisModel = new IrisModel(args[0]);
+//            irisModel.Train();
 
-//            var xorNetwork = new XorNetwork(args[0]);
-//            xorNetwork.Train();
+//            var xorModel = new XorModel(args[0]);
+//            xorModel.Train();
             
-//            var mnistNetwork = new MnistNetwork(args[0]);
-//            mnistNetwork.Train();
+//            var mnistModel = new MnistModel(args[0]);
+//            mnistModel.Train();
 
-            var mnistConvNetwork = new MnistConvNetwork(args[0]);
-            mnistConvNetwork.Train();
+            var mnistConvModel = new MnistConvModel(args[0]);
+            mnistConvModel.Train();
         }
     }
 }

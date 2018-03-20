@@ -1,4 +1,5 @@
-﻿using NeuralNetwork.Layers;
+﻿using System.Collections.Generic;
+using NeuralNetwork.Layers;
 using NeuralNetwork.Network;
 
 namespace NeuralNetwork.PreparedModels
@@ -7,21 +8,23 @@ namespace NeuralNetwork.PreparedModels
     /// This is an example model for solving XOR problem.
     /// Current configuration is capable of achieving 100% accuracy on test data in ~10 epochs
     /// </summary>
-    public class XorNetwork
+    public class XorModel : AbstractModel
     {
         private const string XorTrainDataset = "../../Datasets/xor/train.csv";
         private const string XorTestDataset = "../../Datasets/xor/test.csv";
 
-        private readonly string _checkpointPath;
-
-        public XorNetwork(string checkpointPath)
+        public XorModel(string checkpointPath) : base(checkpointPath)
         {
-            _checkpointPath = checkpointPath;
         }
-        
-        public void Train()
+
+        protected override void Before()
         {
-            var descriptor = new NetworkDescriptor(XorTrainDataset, XorTestDataset, _checkpointPath, 
+            //nothing
+        }
+
+        protected override NetworkDescriptor GetNetworkDescriptor()
+        {
+            return new NetworkDescriptor(XorTrainDataset, XorTestDataset, CheckpointPath, 
                 NetworkType.Onehot, new[] { 2 }, 2)
             {
                 BatchSize = 4,
@@ -33,14 +36,16 @@ namespace NeuralNetwork.PreparedModels
                 LabelsStreamName = "labels",
                 LearningRatePerSample = 0.125f
             };
+        }
 
+        protected override IEnumerable<ILayer> GetLayers()
+        {
             ILayer[] layers =
             {
                 new FullyConnectedLayer(Activation.ReLU, 8)
             };
 
-            var network = new Network.NeuralNetwork(layers, descriptor);
-            network.RunTraining();
+            return layers;
         }
     }
 }

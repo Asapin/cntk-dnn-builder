@@ -11,24 +11,25 @@ namespace NeuralNetwork.PreparedModels
     /// The network automatically downloads MNIST train and text datasets, which are about 130 MB in size.
     /// Current configuration is capable of achieving ~98.8% accuracy on test data.
     /// </summary>
-    public class MnistNetwork
+    public class MnistModel : AbstractModel
     {
         private const string MnistTrainDataset = "../../Datasets/mnist/train.csv";
         private const string MnistTestDataset = "../../Datasets/mnist/test.csv";
 
-        private readonly string _checkpointPath;
-
-        public MnistNetwork(string checkpointPath)
+        public MnistModel(string checkpointPath) : base(checkpointPath)
         {
-            _checkpointPath = checkpointPath;
         }
 
-        public void Train()
+        protected override void Before()
         {
             Console.WriteLine("Preparing MNIST dataset...");
             DownloadUtils.DownloadMnist();
             Console.WriteLine("Preparing MNIST dataset finished.");
-            var descriptor = new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, _checkpointPath, 
+        }
+
+        protected override NetworkDescriptor GetNetworkDescriptor()
+        {
+            return new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, CheckpointPath, 
                 NetworkType.Onehot, new[] { 28 * 28 }, 10)
             {
                 BatchSize = 256,
@@ -47,7 +48,10 @@ namespace NeuralNetwork.PreparedModels
                 },
                 EpochSize = 5
             };
+        }
 
+        protected override IEnumerable<ILayer> GetLayers()
+        {
             ILayer[] layers =
             {
                 new FullyConnectedLayer(Activation.LeakyReLU, 2000),
@@ -56,8 +60,7 @@ namespace NeuralNetwork.PreparedModels
                 new BatchNormalizationLayer(Activation.Tanh, 1000), 
             };
 
-            var network = new Network.NeuralNetwork(layers, descriptor);
-            network.RunTraining();
+            return layers;
         }
     }
 }
