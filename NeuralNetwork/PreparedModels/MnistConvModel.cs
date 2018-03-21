@@ -30,8 +30,7 @@ namespace NeuralNetwork.PreparedModels
 
         protected override NetworkDescriptor GetNetworkDescriptor()
         {
-            return new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, CheckpointPath, 
-                NetworkType.Onehot, new[] { 28, 28, 1 }, 10)
+            return new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, CheckpointPath, new[] { 28, 28, 1 }, 10)
             {
                 BatchSize = 256,
                 EvaluateFrequency = 1,

@@ -21,13 +21,12 @@ namespace NeuralNetwork.Network
         private const string DateTimeFormat = "yyyy-MM-dd-HH-mm";
         private readonly DateTime _dateTime = DateTime.Now;
 
-        public NetworkDescriptor(string trainDataPath, string testDataPath, string checkpointPath, NetworkType type, 
+        public NetworkDescriptor(string trainDataPath, string testDataPath, string checkpointPath,
             int[] inputDimension, int outputClasses)
         {
             TrainDataPath = trainDataPath;
             TestDataPath = testDataPath;
             CheckpointPath = checkpointPath;
-            Type = type;
             InputDimension = inputDimension;
             OutputClasses = outputClasses;
         }
@@ -48,7 +47,7 @@ namespace NeuralNetwork.Network
         public string TestDataPath { get; }
         public string ModelCheckpointPath { get; set;  }
         private string CheckpointPath { get; }
-        public NetworkType Type { get; }
+        public NetworkType Type { get; set; } = NetworkType.Onehot;
         public int[] InputDimension { get; }
         public int OutputClasses { get; }
 

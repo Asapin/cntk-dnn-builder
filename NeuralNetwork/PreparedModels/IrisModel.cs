@@ -24,8 +24,7 @@ namespace NeuralNetwork.PreparedModels
 
         protected override NetworkDescriptor GetNetworkDescriptor()
         {
-            return new NetworkDescriptor(IrisTrainDataset, IrisTestDataset, CheckpointPath, 
-                NetworkType.Onehot, new[] { 4 }, 3)
+            return new NetworkDescriptor(IrisTrainDataset, IrisTestDataset, CheckpointPath, new[] { 4 }, 3)
             {
                 BatchSize = 10,
                 EvaluateFrequency = 1,
@@ -35,7 +34,7 @@ namespace NeuralNetwork.PreparedModels
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
                 LearningRatePerSample = 0.0015f
-            };;
+            };
         }
 
         protected override IEnumerable<ILayer> GetLayers()

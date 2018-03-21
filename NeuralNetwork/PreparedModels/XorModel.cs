@@ -24,8 +24,7 @@ namespace NeuralNetwork.PreparedModels
 
         protected override NetworkDescriptor GetNetworkDescriptor()
         {
-            return new NetworkDescriptor(XorTrainDataset, XorTestDataset, CheckpointPath, 
-                NetworkType.Onehot, new[] { 2 }, 2)
+            return new NetworkDescriptor(XorTrainDataset, XorTestDataset, CheckpointPath, new[] { 2 }, 2)
             {
                 BatchSize = 4,
                 EvaluateFrequency = 1,
