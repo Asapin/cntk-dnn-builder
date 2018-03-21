@@ -34,7 +34,7 @@ namespace NeuralNetwork.PreparedModels
                 BatchSize = 256,
                 EvaluateFrequency = 1,
                 CheckpointFrequency = 150,
-                Epochs = 100,
+                EpochsToTrain = 100,
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
@@ -45,7 +45,7 @@ namespace NeuralNetwork.PreparedModels
                     new DynamicRate(1, 0.003f),
                     new DynamicRate(1, 0.001f)
                 },
-                EpochSize = 5
+                TrainingScheduleEpochs = 5
             };
         }
 

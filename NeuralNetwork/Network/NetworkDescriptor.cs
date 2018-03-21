@@ -6,8 +6,8 @@ namespace NeuralNetwork.Network
 {
     public struct DynamicRate
     {
-        public uint Multyplier;
-        public double Rate;
+        public readonly uint Multyplier;
+        public readonly double Rate;
 
         public DynamicRate(uint multyplier, double rate)
         {
@@ -31,7 +31,7 @@ namespace NeuralNetwork.Network
             OutputClasses = outputClasses;
         }
 
-        public int? Epochs { get; set; }
+        public int? EpochsToTrain { get; set; }
         public uint BatchSize { get; set; } = 100;
         public bool Evaluate { get; set; } = true;
         public int EvaluateFrequency { get; set; } = 10;
@@ -42,7 +42,7 @@ namespace NeuralNetwork.Network
         public float MomentumPerSample { get; set; } = 0.9f;
         public float L2RegularizationWeight { get; set; } = float.NaN;
         public IList<DynamicRate> DynamicLearningRate { get; set; } = new List<DynamicRate>();
-        public uint EpochSize { get; set; } = 100;
+        public uint TrainingScheduleEpochs { get; set; } = 100;
         public string TrainDataPath { get; }
         public string TestDataPath { get; }
         public string ModelCheckpointPath { get; set;  }

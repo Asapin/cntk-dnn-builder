@@ -38,7 +38,7 @@ namespace NeuralNetwork.Network
 
             var i = 0;
             var statsCalc = new StatisticsCalculator();
-            while (_descriptor.Epochs == null || i < _descriptor.Epochs)
+            while (_descriptor.EpochsToTrain == null || i < _descriptor.EpochsToTrain)
             {
                 var minibatchData = minibatchSource.GetNextMinibatch(_descriptor.BatchSize, device);
 
@@ -107,7 +107,7 @@ namespace NeuralNetwork.Network
                     var rate = new PairSizeTDouble(pair.Multyplier, pair.Rate);
                     vector.Add(rate);
                 }
-                learningRateSchedule = new TrainingParameterScheduleDouble(vector, _descriptor.EpochSize);
+                learningRateSchedule = new TrainingParameterScheduleDouble(vector, _descriptor.TrainingScheduleEpochs);
             }
             else
             {
