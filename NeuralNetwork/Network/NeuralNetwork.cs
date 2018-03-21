@@ -38,7 +38,7 @@ namespace NeuralNetwork.Network
 
             var i = 0;
             var statsCalc = new StatisticsCalculator();
-            while (i < _descriptor.Epochs)
+            while (_descriptor.Epochs == null || i < _descriptor.Epochs)
             {
                 var minibatchData = minibatchSource.GetNextMinibatch(_descriptor.BatchSize, device);
 

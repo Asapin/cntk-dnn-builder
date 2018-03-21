@@ -31,7 +31,7 @@ namespace NeuralNetwork.Network
             OutputClasses = outputClasses;
         }
 
-        public int Epochs { get; set; } = 5000;
+        public int? Epochs { get; set; }
         public uint BatchSize { get; set; } = 100;
         public bool Evaluate { get; set; } = true;
         public int EvaluateFrequency { get; set; } = 10;
