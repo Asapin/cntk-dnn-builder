@@ -63,7 +63,7 @@ namespace NeuralNetwork.Network
             int epoch, StatisticsCalculator statsCalc)
         {
             var accuracy = float.NaN;
-            if (epoch % _descriptor.EvaluateFrequency == 0 && _descriptor.Evaluate)
+            if (_descriptor.Evaluate && epoch % _descriptor.EvaluateFrequency == 0)
             {
                 accuracy = _evaluator.EvaluateModel(ref networkModel, ref device);
             }
