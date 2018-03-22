@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NeuralNetwork.Layers;
 using NeuralNetwork.Network;
+using NeuralNetwork.Network.LearningRates;
 using NeuralNetwork.Utils;
 
 namespace NeuralNetwork.PreparedModels
@@ -32,20 +33,20 @@ namespace NeuralNetwork.PreparedModels
             return new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, CheckpointPath, new[] { 28 * 28 }, 10)
             {
                 BatchSize = 256,
-                EvaluateFrequency = 1,
+                EvaluationFrequency = 1,
                 CheckpointFrequency = 150,
                 EpochsToTrain = 100,
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
-                LearningRatePerSample = 0.00125f,
-                DynamicLearningRate = new List<DynamicRate>
-                {
-                    new DynamicRate(1, 1f),
-                    new DynamicRate(1, 0.003f),
-                    new DynamicRate(1, 0.001f)
-                },
-                TrainingScheduleEpochs = 5
+                LearningRate = new DynamicLearningRate(5, 
+                    new List<DynamicRate>
+                    {
+                        new DynamicRate(1, 1f),
+                        new DynamicRate(1, 0.003f),
+                        new DynamicRate(1, 0.001f)
+                    }
+                )
             };
         }
 

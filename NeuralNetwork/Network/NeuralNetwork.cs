@@ -63,7 +63,7 @@ namespace NeuralNetwork.Network
             int epoch, StatisticsCalculator statsCalc)
         {
             var accuracy = float.NaN;
-            if (_descriptor.Evaluate && epoch % _descriptor.EvaluateFrequency == 0)
+            if (_descriptor.Evaluate && epoch % _descriptor.EvaluationFrequency == 0)
             {
                 accuracy = _evaluator.EvaluateModel(ref networkModel, ref device);
             }
@@ -97,22 +97,8 @@ namespace NeuralNetwork.Network
 
         private IList<Learner> GetLearners(ref Function model)
         {
-            TrainingParameterScheduleDouble learningRateSchedule;
+            var learningRateSchedule = _descriptor.LearningRate.GetSchedule();
             var momentumSchedule = new TrainingParameterScheduleDouble(_descriptor.MomentumPerSample);
-            if (_descriptor.DynamicLearningRate != null && _descriptor.DynamicLearningRate.Count > 0)
-            {
-                var vector = new VectorPairSizeTDouble();
-                foreach (var pair in _descriptor.DynamicLearningRate)
-                {
-                    var rate = new PairSizeTDouble(pair.Multyplier, pair.Rate);
-                    vector.Add(rate);
-                }
-                learningRateSchedule = new TrainingParameterScheduleDouble(vector, _descriptor.TrainingScheduleEpochs);
-            }
-            else
-            {
-                learningRateSchedule = new TrainingParameterScheduleDouble(_descriptor.LearningRatePerSample);
-            }
 
             AdditionalLearningOptions learningOptions = null;
             if (!float.IsNaN(_descriptor.L2RegularizationWeight))
@@ -122,7 +108,8 @@ namespace NeuralNetwork.Network
                     l2RegularizationWeight = _descriptor.L2RegularizationWeight
                 };
             }
-            return new List<Learner> {Learner.MomentumSGDLearner(model.Parameters(), learningRateSchedule, momentumSchedule, false, learningOptions)};
+            return new List<Learner> {Learner.MomentumSGDLearner(model.Parameters(), learningRateSchedule, 
+                momentumSchedule, false, learningOptions)};
         }
 
         private Function GetModel(ref Variable features, ref DeviceDescriptor device)

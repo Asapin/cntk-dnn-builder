@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NeuralNetwork.Layers;
 using NeuralNetwork.Network;
+using NeuralNetwork.Network.LearningRates;
 
 namespace NeuralNetwork.PreparedModels
 {
@@ -27,13 +28,13 @@ namespace NeuralNetwork.PreparedModels
             return new NetworkDescriptor(XorTrainDataset, XorTestDataset, CheckpointPath, new[] { 2 }, 2)
             {
                 BatchSize = 4,
-                EvaluateFrequency = 1,
+                EvaluationFrequency = 1,
                 EpochsToTrain = 100,
                 CheckpointFrequency = 150,
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
-                LearningRatePerSample = 0.125f
+                LearningRate = new StaticLearningRate(0.125f)
             };
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CNTK;
 using NeuralNetwork.Layers;
 using NeuralNetwork.Network;
+using NeuralNetwork.Network.LearningRates;
 using NeuralNetwork.Utils;
 
 namespace NeuralNetwork.PreparedModels
@@ -33,13 +34,13 @@ namespace NeuralNetwork.PreparedModels
             return new NetworkDescriptor(MnistTrainDataset, MnistTestDataset, CheckpointPath, new[] { 28, 28, 1 }, 10)
             {
                 BatchSize = 256,
-                EvaluateFrequency = 1,
+                EvaluationFrequency = 1,
                 CheckpointFrequency = 150,
                 EpochsToTrain = 100,
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
-                LearningRatePerSample = 0.00125f
+                LearningRate = new StaticLearningRate(0.00125f)
             };
         }
 

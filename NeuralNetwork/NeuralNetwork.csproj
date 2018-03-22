@@ -56,6 +56,9 @@
     <Compile Include="Layers\FullyConnectedLayer.cs" />
     <Compile Include="Layers\ResidualConvolutionLayer.cs" />
     <Compile Include="Layers\ResidualLayer.cs" />
+    <Compile Include="Network\LearningRates\DynamicLearningRate.cs" />
+    <Compile Include="Network\LearningRates\ILearningRate.cs" />
+    <Compile Include="Network\LearningRates\StaticLearningRate.cs" />
     <Compile Include="Network\StatisticsCalculator.cs" />
     <Compile Include="Network\NetworkDescriptor.cs" />
     <Compile Include="Network\NetworkEvaluator.cs" />

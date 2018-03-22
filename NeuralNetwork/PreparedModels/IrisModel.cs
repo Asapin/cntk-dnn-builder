@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NeuralNetwork.Layers;
 using NeuralNetwork.Network;
+using NeuralNetwork.Network.LearningRates;
 
 namespace NeuralNetwork.PreparedModels
 {
@@ -27,13 +28,13 @@ namespace NeuralNetwork.PreparedModels
             return new NetworkDescriptor(IrisTrainDataset, IrisTestDataset, CheckpointPath, new[] { 4 }, 3)
             {
                 BatchSize = 10,
-                EvaluateFrequency = 1,
+                EvaluationFrequency = 1,
                 CheckpointFrequency = 150,
                 EpochsToTrain = 100,
                 Evaluate = true,
                 FeaturesStreamName = "features",
                 LabelsStreamName = "labels",
-                LearningRatePerSample = 0.0015f
+                LearningRate = new StaticLearningRate(0.0015f)
             };
         }
 
