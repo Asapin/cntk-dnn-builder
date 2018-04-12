@@ -1,5 +1,6 @@
 # Deep Neural Network Builder
-This app allows you to build your own deep neural network by combining different layers without the need to implement them yourself.
+An open-source neural network builder for creating deep neural networks (DNNs) by combining different predefined layers together. 
+The builder currently can construct only DNNs for solving classification problems using supervised learning.
 
 # How to use
 * [Install CNTK 2.4.0 on your machine](https://docs.microsoft.com/en-us/cognitive-toolkit/setup-cntk-on-your-machine)
