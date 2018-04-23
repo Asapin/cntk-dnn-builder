@@ -57,6 +57,8 @@ namespace NeuralNetwork.Network
                 EvaluateAndDumpNetwork(ref classifierOutput, ref device, ref trainer, i, statsCalc);
                 statsCalc.Reset();
             }
+
+            classifierOutput.Save(_descriptor.CheckpointSavePath + "/" + "model");
         }
         
         private void EvaluateAndDumpNetwork(ref Function networkModel, ref DeviceDescriptor device, ref Trainer trainer, 
