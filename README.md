@@ -7,6 +7,7 @@ The builder currently can construct only DNNs for solving classification problem
 * Create new class, that implements AbstractModel
 * Override methods ``Before``, ``GetNetworkDescriptor``, ``GetLayers``
 * Pass a path to a directory where you want to store network's checkpoints as a constructor parameter
+* Install Perl for generating test data
 
 # Examples
 You can find examples of different network models [here](https://github.com/Asapin/cntk-dnn-builder/tree/master/NeuralNetwork/PreparedModels)
